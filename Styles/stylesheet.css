@@ -1,0 +1,86 @@
+/* Eagle Lake */
+@font-face {
+    src: url("Fonts/EagleLake-Regular.ttf");
+}
+
+/* Equivalent of the body in HTML */
+.root {
+    -fx-background: black;
+    -fx-font-family: "Eagle Lake";
+    -fx-font-size: 20px;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-text-alignment: center;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+}
+
+.button:focused {
+    -fx-border-color: red;
+    -fx-text-fill: red;
+}
+
+.hp-display {
+    -fx-pref-height: 22px;
+    -fx-min-height: 22px;
+    -fx-max-height: 22px;
+    -fx-font-size: 12.5px;
+}
+
+.action-button {
+    -fx-pref-width: 120px;
+    -fx-pref-height: 47px;
+}
+
+#item-info {
+    -fx-background-color: black;
+    -fx-padding: 15px;
+    -fx-font-size: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+}
+
+#item-info .button {
+    -fx-font-size: 10px;
+    -fx-border-color: gray;
+}
+
+#item-info .button:focused {
+    -fx-border-color: red;
+}
+
+#battle-pane {
+    -fx-background-color: black;
+    -fx-border-width: 4px;
+    -fx-border-color: white;
+}
+
+#battle-text {
+    -fx-pref-width: 540px;
+    -fx-pref-height: 100px;
+    -fx-alignment: top-left;
+    -fx-padding: 15px;
+    -fx-font-size: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+}
+
+#center {
+    -fx-background-color: transparent;
+}
+
+#death-screen {
+    -fx-background-color: black;
+}
+
+#death-text {
+    -fx-opacity: 0;
+    -fx-fill: red;
+}

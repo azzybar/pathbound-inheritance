@@ -1,0 +1,6 @@
+battleaxe-8-4
+club-4-2
+flail-8-2
+mace-6-4
+quarterstaff-6-4
+warhammer-8-5
