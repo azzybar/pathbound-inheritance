@@ -4,7 +4,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 OS="linux"
-ARCH="x86"
+ARCH="x64"
 
 NAME="Azrael Baram"
 USER="azzybar"
