@@ -3,6 +3,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+OS="linux"
+ARCH="x86"
+
 NAME="Azrael Baram"
 USER="azzybar"
 YEAR="2026"
@@ -14,7 +17,8 @@ VERSION="0.1.0"
 JAVA_VERSION="25"
 MAIN_MODULE="dev.azzybar.pathbound"
 MAIN_CLASS="${MAIN_MODULE}.Project"
-JAR_NAME="pathbound-inheritance-${VERSION}.jar"
+ARCHIVE_NAME="pathbound-inheritance-${VERSION}"
+JAR_NAME="${ARCHIVE_NAME}.jar"
 
 APP_DIR='-Dapp.dir=$APPDIR'
 NATIVE_ACCESS="'--enable-native-access=javafx.graphics'"
@@ -30,6 +34,7 @@ INPUT_DIR="${BUILD_DIR}/input"
 RUNTIME_DIR="${BUILD_DIR}/runtime"
 DIST_DIR="${BUILD_DIR}/dist"
 IMAGE_DIR="${DIST_DIR}/app-image"
+ARCHIVES_DIR="${DIST_DIR}/archives"
 
 ICON="${CLASSES_DIR}/styles/icons/icon.png"
 LICENSES="LICENSE,NOTICE,legal"
@@ -83,5 +88,7 @@ jpackage \
   --java-options "${APP_DIR}" \
   --java-options "${NATIVE_ACCESS}" \
   --dest "${IMAGE_DIR}"
+
+tar -czf "${ARCHIVES_DIR}/${ARCHIVE_NAME}-${OS}-${ARCH}.tar.gz" -C "${IMAGE_DIR}" "${APP_NAME}"
 
 echo "Done. Launch with: ${IMAGE_DIR}/${APP_NAME}/bin/${APP_NAME}"
