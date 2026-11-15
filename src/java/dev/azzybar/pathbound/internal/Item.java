@@ -1,4 +1,4 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
 
 // Meant to be able to return either a weapon or piece
 // of a armor from a chest. Also for any future item

@@ -1,4 +1,5 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.Project;
 
 /*
 Armor Guide:
@@ -167,7 +168,7 @@ public class Armor extends Item {
     public static void addArmor() {
         // Gets path to directory
         Path armorDir = Project.APP_DIR.resolve("items", "armor.txt");
-        System.out.println("Adding armor from: \u001B[36m" + armorDir.toString() + "\u001B[0m");
+        System.out.println("Adding armor from: \u001B[36m" + armorDir + "\u001B[0m");
         
         // Goes through Weapons folder
         try (Stream<String> stream = Files.lines(armorDir)) {

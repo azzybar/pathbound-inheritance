@@ -1,4 +1,4 @@
-module pathbound {
+module dev.azzybar.pathbound {
     requires javafx.controls;
-    exports pathbound;
+    exports dev.azzybar.pathbound;
 }

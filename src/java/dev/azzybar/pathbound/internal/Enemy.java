@@ -1,4 +1,4 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
 
 import javafx.scene.image.Image;
 import javafx.scene.effect.ColorAdjust;

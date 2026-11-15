@@ -1,4 +1,11 @@
-package pathbound;
+package dev.azzybar.pathbound;
+import dev.azzybar.pathbound.internal.GameMap;
+import dev.azzybar.pathbound.internal.Chest;
+import dev.azzybar.pathbound.internal.Enemy;
+import dev.azzybar.pathbound.internal.Player;
+import dev.azzybar.pathbound.internal.BattleEncounter;
+import dev.azzybar.pathbound.internal.Armor;
+import dev.azzybar.pathbound.internal.Weapon;
 
 // Essential for setting up the application and main window
 import javafx.application.Application;
@@ -22,6 +29,10 @@ import java.net.URISyntaxException;
 // For enemy list
 import java.util.List;
 import java.util.ArrayList;
+
+// Listing module version if set
+import java.util.Optional;
+import java.lang.module.ModuleDescriptor;
 
 public class Project extends Application {
     public static final Path APP_DIR = resolveAppDir();
@@ -70,8 +81,25 @@ public class Project extends Application {
         scene.setOnKeyPressed(event -> handleKeyPress(event, stage));
         
         // Sets stage and title
-        stage.setTitle("Pathbound: Inheritance");
+        String title = "Pathbound: Inheritance";
+        ModuleDescriptor descriptor = Project.class.getModule().getDescriptor();
+        if (descriptor != null) {
+            Optional<ModuleDescriptor.Version> moduleVer = descriptor.version();
+            if (moduleVer.isPresent()) {
+                title += " (v" + moduleVer.get() + ")";
+            }
+        }
+        stage.setTitle(title);
         stage.setScene(scene);
+        stage.setResizable(false);
+        String iconPath = "/styles/icons/icon.png";
+        try (InputStream is = Project.class.getResourceAsStream(iconPath)) {
+            if (is != null) {
+                stage.getIcons().add(new Image(is));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         stage.show();
         
         // Post-show adjustments

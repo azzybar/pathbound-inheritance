@@ -1,4 +1,4 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;

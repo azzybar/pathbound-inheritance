@@ -1,4 +1,4 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.HBox;

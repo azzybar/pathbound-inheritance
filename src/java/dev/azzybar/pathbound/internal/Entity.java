@@ -1,4 +1,4 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
 
 // This should technically be an abstract class as it's
 // meant to be a blueprint for Player and Enemy and both

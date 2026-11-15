@@ -1,4 +1,5 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.Project;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
@@ -85,7 +86,7 @@ public class GameMap {
          */
         mapData = new int[MAP_HEIGHT][MAP_WIDTH];
         Path mapPath = Project.APP_DIR.resolve("maps", "map-tiles.txt");
-        System.out.println("Retrieving map data from: \u001B[36m" + mapPath.toString() + "\u001B[0m");
+        System.out.println("Retrieving map data from: \u001B[36m" + mapPath + "\u001B[0m");
         
         // Assigns each tile's image value, reader auto-closes
         try (BufferedReader br = Files.newBufferedReader(mapPath)) {
@@ -343,7 +344,7 @@ public class GameMap {
         }
         System.out.printf("Loading %s from: \u001B[36m%s\u001B[0m\n", 
             (type.equals("map") ? "map tiles" : "sprites"),
-            dir.toString());
+            dir);
             
         // Creates a stream
         try (Stream<Path> stream = Files.walk(dir)) {

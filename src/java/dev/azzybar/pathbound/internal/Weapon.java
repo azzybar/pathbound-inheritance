@@ -1,4 +1,5 @@
-package pathbound;
+package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.Project;
 
 /*
 Weight Guide:
@@ -109,7 +110,7 @@ public class Weapon extends Item {
     public static void addWeapons() {
         // Gets path to directory
         Path weaponsDir = Project.APP_DIR.resolve("items", "weapons");
-        System.out.println("Adding weapons from: \u001B[36m" + weaponsDir.toString() + "\u001B[0m");
+        System.out.println("Adding weapons from: \u001B[36m" + weaponsDir + "\u001B[0m");
         
         // Goes through Weapons folder
         try (Stream<Path> stream = Files.walk(weaponsDir)) {
