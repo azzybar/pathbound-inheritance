@@ -1,3 +1,5 @@
+package pathbound;
+
 import javafx.scene.image.Image;
 import javafx.scene.effect.ColorAdjust;
 public class Enemy extends Entity {

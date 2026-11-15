@@ -1,3 +1,5 @@
+package pathbound;
+
 // Essential for setting up the application and main window
 import javafx.application.Application;
 import javafx.stage.Stage;

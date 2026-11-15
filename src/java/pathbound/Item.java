@@ -1,3 +1,5 @@
+package pathbound;
+
 // Meant to be able to return either a weapon or piece
 // of a armor from a chest. Also for any future item
 // subclasses if developed.

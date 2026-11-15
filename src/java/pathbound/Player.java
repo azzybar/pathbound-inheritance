@@ -1,3 +1,5 @@
+package pathbound;
+
 import javafx.scene.image.Image;
 import javafx.animation.TranslateTransition;
 import javafx.animation.Interpolator;

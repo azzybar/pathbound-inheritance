@@ -1,3 +1,5 @@
+package pathbound;
+
 /*
 Weight Guide:
 - Light = 1-3 lbs (10% initiative delay)

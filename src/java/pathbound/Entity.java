@@ -1,3 +1,5 @@
+package pathbound;
+
 // This should technically be an abstract class as it's
 // meant to be a blueprint for Player and Enemy and both
 // need to override the takeTurn() method.
