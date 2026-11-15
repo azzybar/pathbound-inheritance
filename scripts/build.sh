@@ -19,9 +19,10 @@ JAR_NAME="pathbound-inheritance-${VERSION}.jar"
 APP_DIR='-Dapp.dir=$APPDIR'
 NATIVE_ACCESS="'--enable-native-access=javafx.graphics'"
 
-SRC_DIR="src/java"
-RES_DIR="src/resources"
-RESOURCES=("items" "maps" "sprites")
+SRC_DIR="src/main"
+JAVA_DIR="${SRC_DIR}/java"
+RESOURCES_DIR="${SRC_DIR}/resources"
+ASSETS_DIR="assets"
 BUILD_DIR="build"
 CLASSES_DIR="${BUILD_DIR}/classes"
 JAR_DIR="${BUILD_DIR}/jar"
@@ -42,10 +43,10 @@ echo "Compiling Java files..."
 javac --release "${JAVA_VERSION}" \
       --module-path "${JAVAFX_SDK}" \
       -d "${CLASSES_DIR}" \
-      "${SRC_DIR}/module-info.java" \
-      "${SRC_DIR}/dev/azzybar/pathbound/"*.java \
-      "${SRC_DIR}/dev/azzybar/pathbound/internal/"*.java
-cp -r "${RES_DIR}/styles" "${CLASSES_DIR}/"
+      "${JAVA_DIR}/module-info.java" \
+      "${JAVA_DIR}/dev/azzybar/pathbound/"*.java \
+      "${JAVA_DIR}/dev/azzybar/pathbound/internal/"*.java
+cp -r "${RESOURCES_DIR}/"* "${CLASSES_DIR}/"
 
 echo "Creating ${JAR_NAME}..."
 jar --create \
@@ -64,13 +65,8 @@ if [[ ! -d "${RUNTIME_DIR}" ]]; then
           --output "${RUNTIME_DIR}"
 fi
 
-for res in "${RESOURCES[@]}"; do
-    if [[ -d "${RES_DIR}/${res}" ]]; then
-        cp -r "${RES_DIR}/${res}" "${INPUT_DIR}/"
-    fi
-done
-
 echo "Packaging ${PROJECT} (v${VERSION})..."
+cp -r "${ASSETS_DIR}/"* "${INPUT_DIR}/"
 jpackage \
   --type app-image \
   --name "${APP_NAME}" \
