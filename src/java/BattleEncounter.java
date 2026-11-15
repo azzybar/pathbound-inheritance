@@ -227,7 +227,7 @@ public class BattleEncounter {
                 MAP.getSceneWidth(), 
                 MAP.getSceneHeight(), 
                 Color.BLACK);
-            scene.getStylesheets().add("Styles/stylesheet.css");
+            scene.getStylesheets().add(Project.CSS_PATH);
             STAGE.setScene(scene);
             
             // Plays game over animation
@@ -296,7 +296,7 @@ public class BattleEncounter {
             MAP.getSceneHeight(), 
             Color.BLACK);
         scene.setCursor(Cursor.NONE);
-        scene.getStylesheets().add("Styles/stylesheet.css");
+        scene.getStylesheets().add(Project.CSS_PATH);
         STAGE.setScene(scene);
         
         // Adjusts margins

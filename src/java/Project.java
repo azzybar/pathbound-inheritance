@@ -10,15 +10,21 @@ import javafx.scene.text.Font;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
-// Used for loading font
+// Used for loading font and getting app dir
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 // For enemy list
 import java.util.List;
 import java.util.ArrayList;
 
 public class Project extends Application {
+    public static final Path APP_DIR = resolveAppDir();
+    public static final String CSS_PATH = Project.class.getResource("/styles/stylesheet.css").toExternalForm();
+
     // Game map and all interactable elements
     private GameMap MAP;
     private List<Chest> chests;
@@ -58,11 +64,11 @@ public class Project extends Application {
             MAP.getSceneHeight(),
             Color.BLACK);
         scene.setCursor(Cursor.NONE);
-        scene.getStylesheets().add("Styles/stylesheet.css");
+        scene.getStylesheets().add(CSS_PATH);
         scene.setOnKeyPressed(event -> handleKeyPress(event, stage));
         
         // Sets stage and title
-        stage.setTitle("RPG Game");
+        stage.setTitle("Pathbound: Inheritance");
         stage.setScene(scene);
         stage.show();
         
@@ -152,13 +158,17 @@ public class Project extends Application {
     // For loading imported fonts and other items
     private void setupGame() {
         // File path for fonts directory
-        Path fontPath = Paths.get("Styles/Fonts/EagleLake-Regular.ttf");
-        System.out.println("Loading font \u001B[36m" + fontPath.getFileName() + "\u001B[0m");
-        Font font = Font.loadFont(
-            Project.class.getClassLoader()
-            .getResourceAsStream(fontPath.toString()), 
-            10);
-        System.out.println("\u001B[92mSuccessfully loaded " + font.getName() + "\u001B[0m");
+        Font font;
+        String fontPath = "/styles/fonts/EagleLake-Regular.ttf";
+        System.out.println("Loading font \u001B[36m" + fontPath + "\u001B[0m");
+        try (InputStream is = Project.class.getResourceAsStream(fontPath)) {
+            if (is != null) {
+                font = Font.loadFont(is, 10);
+                System.out.println("\u001B[92mSuccessfully loaded " + font.getName() + "\u001B[0m");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         
         // Loads items (armor and weapons);
         Armor.addArmor();
@@ -172,5 +182,28 @@ public class Project extends Application {
     
     public static void main(String[] args){
         launch(args);
+    }
+
+    private static Path resolveAppDir() {
+        // If launched after jpackage
+        String appDir = System.getProperty("app.dir");
+        if (appDir != null) {
+            return Path.of(appDir).toAbsolutePath();
+        }
+
+        // If launched after creating jar file
+        try {
+            Path codeLocation = Path.of(Project.class.getProtectionDomain()
+                                               .getCodeSource()
+                                               .getLocation()
+                                               .toURI());
+            if (Files.isRegularFile(codeLocation)) {
+                return codeLocation.getParent();
+            }
+        } catch (URISyntaxException e) {
+        }
+
+        // Running from the compiled class files
+        return Path.of("").toAbsolutePath();
     }
 }

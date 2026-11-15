@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
@@ -83,7 +82,7 @@ public class GameMap {
          * translate to x = 0, y = 1, which is 0 in the array
          */
         mapData = new int[MAP_HEIGHT][MAP_WIDTH];
-        Path mapPath = Paths.get("Maps/map-tiles.txt");
+        Path mapPath = Project.APP_DIR.resolve("maps", "map-tiles.txt");
         System.out.println("Retrieving map data from: \u001B[36m" + mapPath.toString() + "\u001B[0m");
         
         // Assigns each tile's image value, reader auto-closes
@@ -334,11 +333,11 @@ public class GameMap {
         if (type.equals("map")) {
             // Loads all map tiles
             mapTiles = new HashMap<String,Image>();
-            dir = Paths.get("Maps/Images");
+            dir = Project.APP_DIR.resolve("maps", "images");
         } else {
             // Loads all enemy sprites
             sprites = new HashMap<String,Image>();
-            dir = Paths.get("Sprites/Enemies");
+            dir = Project.APP_DIR.resolve("sprites", "enemies");
         }
         System.out.printf("Loading %s from: \u001B[36m%s\u001B[0m\n", 
             (type.equals("map") ? "map tiles" : "sprites"),

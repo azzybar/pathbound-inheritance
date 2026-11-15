@@ -35,8 +35,11 @@ public class Sprite {
         this.TILE_SIZE = that.TILE_SIZE;
         
         // Copies the sprite itself and the container
-        String path = name.equals("player") ? ("Sprites/Player/" + name + ".png") 
-            : ("Sprites/Enemies/" + name + ".png");
+        String path = Project.APP_DIR.resolve("sprites",
+                                              (name.equals("player") ? "player" : "enemies"),
+                                              (name + ".png"))
+                                     .toUri()
+                                     .toString();
         this.sprite = new ImageView(new Image(path, 150, 150, true, true));
         this.container = new Pane(sprite);
         

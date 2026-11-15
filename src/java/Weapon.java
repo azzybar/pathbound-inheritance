@@ -30,7 +30,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -107,7 +106,7 @@ public class Weapon extends Item {
     // Adds weapons to lists
     public static void addWeapons() {
         // Gets path to directory
-        Path weaponsDir = Paths.get("Items/Weapons");
+        Path weaponsDir = Project.APP_DIR.resolve("items", "weapons");
         System.out.println("Adding weapons from: \u001B[36m" + weaponsDir.toString() + "\u001B[0m");
         
         // Goes through Weapons folder

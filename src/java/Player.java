@@ -13,8 +13,12 @@ public class Player extends Entity {
     
     // Constructor
     public Player(int tileSize, int x, int y) {
+        String playerPath = Project.APP_DIR
+                                  .resolve("sprites", "player", "player.png")
+                                  .toUri()
+                                  .toString();
         super(tileSize, 
-            new Image("Sprites/Player/player.png", 
+            new Image(playerPath,
                 (tileSize * 0.875), 
                 (tileSize * 0.875), 
                 true, true), 

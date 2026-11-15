@@ -27,7 +27,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -165,7 +164,7 @@ public class Armor extends Item {
     // Adds armor to lists
     public static void addArmor() {
         // Gets path to directory
-        Path armorDir = Paths.get("Items/armor.txt");
+        Path armorDir = Project.APP_DIR.resolve("items", "armor.txt");
         System.out.println("Adding armor from: \u001B[36m" + armorDir.toString() + "\u001B[0m");
         
         // Goes through Weapons folder
