@@ -1,3 +1,6 @@
+// Copyright 2026 Azrael Baram (azzybar)
+// SPDX-License-Identifier: Apache-2.0
+
 package dev.azzybar.pathbound;
 import dev.azzybar.pathbound.internal.GameMap;
 import dev.azzybar.pathbound.internal.Chest;
