@@ -26,6 +26,7 @@ public class Sprite {
         
         // Creates entity sprite
         this.sprite = new ImageView(img);
+        this.sprite.setSmooth(false);
         this.container = new Pane(sprite);
         
         // Sets default position (centers player sprite)
@@ -47,6 +48,7 @@ public class Sprite {
                                      .toUri()
                                      .toString();
         this.sprite = new ImageView(new Image(path, 150, 150, true, true));
+        this.sprite.setSmooth(false);
         this.container = new Pane(sprite);
         
         // Sets to 0 (not map-dependent)

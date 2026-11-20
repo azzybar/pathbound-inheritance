@@ -221,6 +221,7 @@ public class BattleEncounter {
         } else {
             // Creates death screen
             ImageView playerSprite = new Sprite("player", player.getSprite()).get();
+            playerSprite.setSmooth(false);
             Text deathText = new Text("You have succumbed to death.");
             deathText.setId("death-text");
             

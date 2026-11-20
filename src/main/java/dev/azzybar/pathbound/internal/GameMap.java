@@ -124,12 +124,13 @@ public class GameMap {
         MAP = new GridPane();
         for (int row = 0; row < MAP_WIDTH; row++) {
             for (int col = 0; col < MAP_HEIGHT; col++) {
-                ImageView tile = null;
+                ImageView tile = new ImageView();
+                tile.setSmooth(false);
                 
                 // Path for ending or starting
                 if ((col == 0 && row == 18) || 
                     (col == 14 && row == 1)) {
-                    tile = new ImageView(mapTiles.get("path"));
+                    tile.setImage(mapTiles.get("path"));
                     tile.getStyleClass().add("image-view");
                     tile.setFocusTraversable(false);
                     MAP.add(tile, row, col);
@@ -153,7 +154,7 @@ public class GameMap {
                     case 3:
                         // Randomly picks grass or rock tile
                         int t = (int) (Math.random() * 10);
-                        tile = new ImageView((t < 2) ? mapTiles.get("rocks") 
+                        tile.setImage((t < 2) ? mapTiles.get("rocks")
                             : (t < 5) ? mapTiles.get("grass")
                             : mapTiles.get("tree"));
                         
@@ -164,14 +165,14 @@ public class GameMap {
                         }
                         break;
                     case 4:
-                        tile = new ImageView(mapTiles.get("building"));
+                        tile.setImage(mapTiles.get("building"));
                         break;
                     default:
                         break;
                 }
                 
                 // Adds tile to map
-                if (tile != null) {
+                if (tile.getImage() != null && !tile.getImage().isError()) {
                     tile.getStyleClass().add("image-view");
                     tile.setFocusTraversable(false);
                     MAP.add(tile, row, col);
@@ -225,11 +226,12 @@ public class GameMap {
         
         // Narrows path options
         int r = 0;
-        ImageView tile = null;
+        ImageView tile = new ImageView();
+        tile.setSmooth(false);
         switch (openPaths) {
             case 1:
                 // End paths (for enemies)
-                tile = new ImageView(mapTiles.get("path-end"));
+                tile.setImage(mapTiles.get("path-end"));
                 for (Map.Entry<String,Boolean> entry : walkable.entrySet()) {
                     // Finds the beginning
                     if (entry.getValue()) {
@@ -253,7 +255,7 @@ public class GameMap {
             case 2:
                 // Checks whether straight or corner
                 if (isCorner(walkable)) {
-                    tile = new ImageView(mapTiles.get("path-corner"));
+                    tile.setImage(mapTiles.get("path-corner"));
                     
                     // Determines how far to rotate
                     boolean rOne = walkable.get("south") && walkable.get("west");
@@ -264,7 +266,7 @@ public class GameMap {
                         rTwo ? 2 :
                         rThree ? 3 : 0;
                 } else {
-                    tile = new ImageView(mapTiles.get("path"));
+                    tile.setImage(mapTiles.get("path"));
                     
                     // Checks if it's horizontal
                     boolean isHoriz = walkable.get("east") && walkable.get("west");
@@ -272,7 +274,7 @@ public class GameMap {
                 }
                 break;
             case 3:
-                tile = new ImageView(mapTiles.get("path-threeway"));
+                tile.setImage(mapTiles.get("path-threeway"));
                 
                 // Finds which direction to rotate
                 boolean rOne = walkable.get("south") 
@@ -291,14 +293,14 @@ public class GameMap {
                 break;
             case 4:
                 // Fourway is direction-independent
-                tile = new ImageView(mapTiles.get("path-fourway"));
+                tile.setImage(mapTiles.get("path-fourway"));
                 break;
             default:
                 break;
         }
         
         // Rotates and returns image
-        if (tile != null) {
+        if (tile.getImage() != null && !tile.getImage().isError()) {
             tile.setRotate(r * 90);
         }
         
