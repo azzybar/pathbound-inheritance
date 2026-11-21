@@ -220,7 +220,7 @@ public class BattleEncounter {
             System.out.println("\u001B[36mSuccessfully switched to map\u001B[0m");
         } else {
             // Creates death screen
-            ImageView playerSprite = new Sprite("player", player.getSprite()).get();
+            ImageView playerSprite = player.getSprite().getView();
             playerSprite.setSmooth(false);
             Text deathText = new Text("You have succumbed to death.");
             deathText.setId("death-text");
@@ -231,8 +231,8 @@ public class BattleEncounter {
             // Creates dedicated scene to end game on
             Scene scene = new Scene(
                 deathScreen, 
-                MAP.getSceneWidth(), 
-                MAP.getSceneHeight(), 
+                Project.NATIVE_WIDTH,
+                Project.NATIVE_HEIGHT,
                 Color.BLACK);
             scene.getStylesheets().add(Project.CSS_PATH);
             STAGE.setScene(scene);
@@ -277,8 +277,8 @@ public class BattleEncounter {
         BorderPane root = new BorderPane();
         root.setMouseTransparent(true);
         
-        StackPane center = new StackPane(enemySprite.get(), battleText);
-        center.setAlignment(enemySprite.get(), Pos.CENTER);
+        StackPane center = new StackPane(enemySprite.getView(), battleText);
+        center.setAlignment(enemySprite.getView(), Pos.CENTER);
         center.setAlignment(battleText, Pos.BOTTOM_CENTER);
         root.setCenter(center);
         
@@ -299,16 +299,16 @@ public class BattleEncounter {
         // Creates battle scene
         Scene scene = new Scene(
             root, 
-            MAP.getSceneWidth(), 
-            MAP.getSceneHeight(), 
+            Project.NATIVE_WIDTH,
+            Project.NATIVE_HEIGHT,
             Color.BLACK);
         scene.setCursor(Cursor.NONE);
         scene.getStylesheets().add(Project.CSS_PATH);
         STAGE.setScene(scene);
         
         // Adjusts margins
-        center.setMargin(enemySprite.get(), new Insets(0, 0, (MAP.getTileSize() * 3), 0));
-        battleGUI.setMargin(player.status().get(), new Insets(MAP.getTileSize() / 2, 0, 0, 50));
+        center.setMargin(enemySprite.getView(), new Insets(0, 0, (GameMap.TILE_SIZE * 3), 0));
+        battleGUI.setMargin(player.status().get(), new Insets(GameMap.TILE_SIZE / 2, 0, 0, 50));
         
         // Goes through the action buttons
         for (Node node : actionMenu.getChildren()) {
@@ -316,7 +316,7 @@ public class BattleEncounter {
                 // Adds their css and margins
                 Button button = (Button) node;
                 button.getStyleClass().add("action-button");
-                actionMenu.setMargin(button, new Insets(0, 0, MAP.getTileSize(), 0));
+                actionMenu.setMargin(button, new Insets(0, 0, GameMap.TILE_SIZE, 0));
             }
         }
         System.out.println("\u001B[92mSuccessfully switched to battle scene\u001B[0m");

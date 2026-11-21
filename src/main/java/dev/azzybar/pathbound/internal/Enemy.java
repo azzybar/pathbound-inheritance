@@ -12,8 +12,8 @@ public class Enemy extends Entity {
     private boolean wasKilled;
     
     // Constructor
-    public Enemy(int tileSize, Image img, int x, int y, String name) {
-        super(tileSize, img, x, y);
+    public Enemy(Image img, int x, int y, String name) {
+        super(img, x, y);
         this.name = name;
         
         // Randomizes stats (with upper and lower limits)
@@ -42,7 +42,7 @@ public class Enemy extends Entity {
     public void kill() {
         ColorAdjust grayscale = new ColorAdjust();
         grayscale.setSaturation(-1.0);
-        getSprite().get().setEffect(grayscale);
+        getSprite().getView().setEffect(grayscale);
         wasKilled = true;
     }
     

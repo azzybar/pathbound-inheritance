@@ -56,8 +56,8 @@ public class Chest {
     private boolean wasOpened;
     
     // Constructor
-    public Chest(int tileSize, Image img, int x, int y) {
-        this.sprite = new Sprite(tileSize, img, x, y);
+    public Chest(Image img, int x, int y) {
+        this.sprite = new Sprite(img, x, y);
         this.wasOpened = false;
         
         // Decides which loot to hold
@@ -190,7 +190,7 @@ public class Chest {
     private void close() {
         ColorAdjust grayscale = new ColorAdjust();
         grayscale.setSaturation(-1.0);
-        sprite.get().setEffect(grayscale);
+        sprite.getView().setEffect(grayscale);
         wasOpened = true;
     }
     

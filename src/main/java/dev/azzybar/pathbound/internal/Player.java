@@ -18,17 +18,16 @@ public class Player extends Entity {
     private Weapon weapon;
     
     // Constructor
-    public Player(int tileSize, int x, int y) {
+    public Player(int x, int y) {
         String playerPath = Project.APP_DIR
                                   .resolve("sprites", "player", "player.png")
                                   .toUri()
                                   .toString();
-        super(tileSize, 
-            new Image(playerPath,
-                (tileSize * 0.875), 
-                (tileSize * 0.875), 
-                true, true), 
-            x, y);
+        super(new Image(playerPath,
+                        GameMap.TILE_SIZE,
+                        GameMap.TILE_SIZE,
+                        true, true),
+              x, y);
         this.isMoving = false;
         this.status = new HpStatus(this);
         this.armor = new Armor[4];
@@ -81,7 +80,7 @@ public class Player extends Entity {
         sprite.updatePosition(x, y);
         
         // Creates a linear transition to move player
-        TranslateTransition translate = new TranslateTransition(Duration.millis(100), sprite.get());
+        TranslateTransition translate = new TranslateTransition(Duration.millis(100), sprite.getView());
         translate.setToX(sprite.getPixelX());
         translate.setToY(sprite.getPixelY());
         translate.setInterpolator(Interpolator.LINEAR);

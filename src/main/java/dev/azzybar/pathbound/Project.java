@@ -41,10 +41,12 @@ public class Project extends Application {
     public static final Path APP_DIR = resolveAppDir();
     public static final String CSS_PATH = Project.class.getResource("/styles/stylesheet.css").toExternalForm();
 
+    // Native screen resolution (640x480)
+    public static final double NATIVE_WIDTH = GameMap.TILE_SIZE * GameMap.WIDTH;
+    public static final double NATIVE_HEIGHT = GameMap.TILE_SIZE * GameMap.HEIGHT;
+
     // Game map and all interactable elements
-    private GameMap MAP;
-    private List<Chest> chests;
-    private List<Enemy> enemies;
+    private GameMap map;
     private Player player;
     
     @Override
@@ -52,20 +54,20 @@ public class Project extends Application {
         setupGame();
         
         // Creates player and sets up root
-        player = new Player(MAP.getTileSize(), 1, 14);
+        player = new Player(1, 14);
         StackPane root = new StackPane(
-            MAP.get(), 
+            map.getView(),
             player.getSprite().getContainer());
         root.setMouseTransparent(true);
             
         // Adds enemies
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : map.getEnemies()) {
             root.getChildren()
                 .add(enemy.getSprite().getContainer());
         }
-        
+
         // Adds chests
-        for (Chest chest : chests) {
+        for (Chest chest : map.getChests()) {
             root.getChildren()
                 .add(chest.getSprite().getContainer());
         }
@@ -76,8 +78,8 @@ public class Project extends Application {
         // Creates scene
         Scene scene = new Scene(
             root, 
-            MAP.getSceneWidth(), 
-            MAP.getSceneHeight(),
+            NATIVE_WIDTH,
+            NATIVE_HEIGHT,
             Color.BLACK);
         scene.setCursor(Cursor.NONE);
         scene.getStylesheets().add(CSS_PATH);
@@ -130,7 +132,7 @@ public class Project extends Application {
                 break;
             case DOWN:
             case S:
-                if (y < MAP.getHeight() - 1) {
+                if (y < GameMap.HEIGHT - 1) {
                     y++;
                 }
                 break;
@@ -142,7 +144,7 @@ public class Project extends Application {
                 break;
             case RIGHT:
             case D:
-                if (x < MAP.getWidth() - 1) {
+                if (x < GameMap.WIDTH - 1) {
                     x++;
                 }
                 break;
@@ -151,7 +153,7 @@ public class Project extends Application {
         }
         
         // Checks if map tile blocks path
-        int[][] mapData = MAP.getMapData();
+        int[][] mapData = map.getMapData();
         if (mapData[y][x] > 2) {
             return;
         }
@@ -159,19 +161,19 @@ public class Project extends Application {
         // Checks if space held an enemy or chest
         if (mapData[y][x] == 1) {
             // Goes through the enemy list
-            for (Enemy enemy : enemies) {
+            for (Enemy enemy : map.getEnemies()) {
                 // Checks whether the enemy's position matches the current position
                 int enemyX = enemy.getSprite().getX();
                 int enemyY = enemy.getSprite().getY();
                 
                 // Checks if enemy was defeated already
                 if ((enemyX == x && enemyY == y) && !enemy.wasKilled()) {
-                    new BattleEncounter(player, enemy, stage, MAP).start();
+                    new BattleEncounter(player, enemy, stage, map).start();
                 }
             }
         } else if (mapData[y][x] == 2) {
             // Goes through the chests list
-            for (Chest chest : chests) {
+            for (Chest chest : map.getChests()) {
                 // Gets chest's position
                 int chestX = chest.getSprite().getX();
                 int chestY = chest.getSprite().getY();
@@ -203,14 +205,10 @@ public class Project extends Application {
             e.printStackTrace();
         }
         
-        // Loads items (armor and weapons);
+        // Loads items (armor and weapons) and map
         Armor.addArmor();
         Weapon.addWeapons();
-        
-        // Sets up main game components
-        chests = new ArrayList<Chest>();
-        enemies = new ArrayList<Enemy>();
-        MAP = new GameMap(chests, enemies);
+        map = new GameMap();
     }
     
     public static void main(String[] args){

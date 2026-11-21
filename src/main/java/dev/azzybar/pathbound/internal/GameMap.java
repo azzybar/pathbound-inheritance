@@ -18,24 +18,25 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
-// For holding map images
+// For map images and setting up lists
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GameMap {
     // Information regarding map and screen size
-    private final int TILE_SIZE;
-    private final int MAP_WIDTH;
-    private final int MAP_HEIGHT;
-    private GridPane MAP;
-    private int[][] mapData;
+    public static final int TILE_SIZE = 32;
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 15;
+    private final GridPane map;
+    private final int[][] mapData;
     
     // Map tiles and entity sprites
-    private Map<String,Image> mapTiles;
-    private Map<String,Image> sprites;
-    private List<Chest> chests;
-    private List<Enemy> enemies;
+    private final Map<String,Image> mapTiles;
+    private final Map<String,Image> sprites;
+    private final List<Chest> chests;
+    private final List<Enemy> enemies;
     
     /*
     MAP TILES:
@@ -51,15 +52,18 @@ public class GameMap {
     - building = 4
     */
     
-    public GameMap(List<Chest> chests, List<Enemy> enemies) {
-        // 640x480
-        this.TILE_SIZE = 32;
-        this.MAP_WIDTH = 20;
-        this.MAP_HEIGHT = 15;
-        
+    public GameMap() {
+        // Map data
+        this.map = new GridPane();
+        this.mapData = new int[HEIGHT][WIDTH];
+
+        // Images for tiles and sprites
+        this.mapTiles = new HashMap<String,Image>();
+        this.sprites = new HashMap<String,Image>();
+
         // Interactables
-        this.chests = chests;
-        this.enemies = enemies;
+        this.chests = new ArrayList<Chest>();
+        this.enemies = new ArrayList<Enemy>();
         
         // Setup methods
         loadImages("map");
@@ -87,14 +91,13 @@ public class GameMap {
          * So [0][1] would return 1; however, that would
          * translate to x = 0, y = 1, which is 0 in the array
          */
-        mapData = new int[MAP_HEIGHT][MAP_WIDTH];
         Path mapPath = Project.APP_DIR.resolve("maps", "map-tiles.txt");
         System.out.println("Retrieving map data from: \u001B[36m" + mapPath + "\u001B[0m");
         
         // Assigns each tile's image value, reader auto-closes
         try (BufferedReader br = Files.newBufferedReader(mapPath)) {
             String line;
-            for (int row = 0; row < MAP_HEIGHT; row++) {
+            for (int row = 0; row < HEIGHT; row++) {
                 // Checks that there is a line to read
                 if ((line = br.readLine()) != null) {
                     // Creates a String array of the data
@@ -102,7 +105,7 @@ public class GameMap {
                     String[] data = line.split(" ");
                     
                     // Goes through each number and adds it
-                    for (int col = 0; col < MAP_WIDTH; col++) {
+                    for (int col = 0; col < WIDTH; col++) {
                         mapData[row][col] = Integer.parseInt(data[index]);
                         
                         // Checks and updates chest count
@@ -121,9 +124,8 @@ public class GameMap {
         
         // Sets visual map based on mapData
         System.out.println("Initializing new game map");
-        MAP = new GridPane();
-        for (int row = 0; row < MAP_WIDTH; row++) {
-            for (int col = 0; col < MAP_HEIGHT; col++) {
+        for (int row = 0; row < WIDTH; row++) {
+            for (int col = 0; col < HEIGHT; col++) {
                 ImageView tile = new ImageView();
                 tile.setSmooth(false);
                 
@@ -133,7 +135,7 @@ public class GameMap {
                     tile.setImage(mapTiles.get("path"));
                     tile.getStyleClass().add("image-view");
                     tile.setFocusTraversable(false);
-                    MAP.add(tile, row, col);
+                    map.add(tile, row, col);
                     continue;
                 }
                 
@@ -146,10 +148,10 @@ public class GameMap {
                         break;
                     case 2:
                         // Creates a chest object
-                        Chest chest = new Chest(TILE_SIZE, mapTiles.get("chest"), row, col);
+                        Chest chest = new Chest(mapTiles.get("chest"), row, col);
                         chests.add(chest);
                         Rectangle spot = new Rectangle(TILE_SIZE, TILE_SIZE, Color.BLACK);
-                        MAP.add(spot, row, col);
+                        map.add(spot, row, col);
                         break;
                     case 3:
                         // Randomly picks grass or rock tile
@@ -175,7 +177,7 @@ public class GameMap {
                 if (tile.getImage() != null && !tile.getImage().isError()) {
                     tile.getStyleClass().add("image-view");
                     tile.setFocusTraversable(false);
-                    MAP.add(tile, row, col);
+                    map.add(tile, row, col);
                 }
             }
         }
@@ -198,13 +200,13 @@ public class GameMap {
             walkable.replace("north", true);
         }
         
-        if (row + 1 < MAP_WIDTH 
+        if (row + 1 < WIDTH
             && (mapData[col][row + 1] == 0 
             || mapData[col][row + 1] == 1)) {
             walkable.replace("east", true);
         }
         
-        if (col + 1 < MAP_HEIGHT 
+        if (col + 1 < HEIGHT
             && (mapData[col + 1][row] == 0 
             || mapData[col + 1][row] == 1)) {
             walkable.replace("south", true);
@@ -331,7 +333,7 @@ public class GameMap {
         int t = (int) (Math.random() * types.length);
         
         // Creates a randomized enemy
-        Enemy enemy = new Enemy(TILE_SIZE, sprites.get(types[t]), y, x, types[t]);
+        Enemy enemy = new Enemy(sprites.get(types[t]), y, x, types[t]);
         enemies.add(enemy);
     }
     
@@ -340,11 +342,9 @@ public class GameMap {
         Path dir = null;
         if (type.equals("map")) {
             // Loads all map tiles
-            mapTiles = new HashMap<String,Image>();
             dir = Project.APP_DIR.resolve("maps", "images");
         } else {
             // Loads all enemy sprites
-            sprites = new HashMap<String,Image>();
             dir = Project.APP_DIR.resolve("sprites", "enemies");
         }
         System.out.printf("Loading %s from: \u001B[36m%s\u001B[0m\n", 
@@ -387,11 +387,8 @@ public class GameMap {
     }
     
     // Getters
-    public int getTileSize() { return TILE_SIZE; }
-    public int getWidth() { return MAP_WIDTH; }
-    public int getHeight() { return MAP_HEIGHT; }
-    public double getSceneWidth() { return TILE_SIZE * MAP_WIDTH; }
-    public double getSceneHeight() { return TILE_SIZE * MAP_HEIGHT; }
-    public GridPane get() { return MAP; }
+    public GridPane getView() { return map; }
     public int[][] getMapData() { return mapData; }
+    public List<Chest> getChests() { return chests; }
+    public List<Enemy> getEnemies() { return enemies; }
 }

@@ -22,8 +22,8 @@ public abstract class Entity {
     private double EVA;
     
     // Constructor
-    protected Entity(int tileSize, Image img, int x, int y) {
-        this.sprite = new Sprite(tileSize, img, x, y);
+    protected Entity(Image img, int x, int y) {
+        this.sprite = new Sprite(img, x, y);
         
         // Health
         this.maxHp = 20;

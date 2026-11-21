@@ -10,9 +10,8 @@ import javafx.scene.image.ImageView;
 import java.util.Map;
 public class Sprite {
     // Tile size and sprite
-    private final int TILE_SIZE;
-    private ImageView sprite;
-    private Pane container;
+    private final ImageView sprite;
+    private final Pane container;
     
     // Position (grid and visual)
     private int x;
@@ -21,9 +20,7 @@ public class Sprite {
     private double pixelY;
     
     // Constructor
-    public Sprite(int tileSize, Image img, int x, int y) {
-        this.TILE_SIZE = tileSize;
-        
+    public Sprite(Image img, int x, int y) {
         // Creates entity sprite
         this.sprite = new ImageView(img);
         this.sprite.setSmooth(false);
@@ -39,15 +36,16 @@ public class Sprite {
     
     // Copy constructor (deep copy, for battles)
     public Sprite(String name, Sprite that) {
-        this.TILE_SIZE = that.TILE_SIZE;
-        
         // Copies the sprite itself and the container
         String path = Project.APP_DIR.resolve("sprites",
                                               (name.equals("player") ? "player" : "enemies"),
                                               (name + ".png"))
                                      .toUri()
                                      .toString();
-        this.sprite = new ImageView(new Image(path, 150, 150, true, true));
+        this.sprite = new ImageView(new Image(path,
+                                              GameMap.TILE_SIZE,
+                                              GameMap.TILE_SIZE,
+                                              true, true));
         this.sprite.setSmooth(false);
         this.container = new Pane(sprite);
         
@@ -60,12 +58,13 @@ public class Sprite {
     
     // Updates visual position
     public void updatePosition(int x, int y) {
-        this.pixelX = x * TILE_SIZE;
-        this.pixelY = y * TILE_SIZE;
+        this.pixelX = x * GameMap.TILE_SIZE;
+        this.pixelY = y * GameMap.TILE_SIZE;
     }
     
     // Getters
-    public ImageView get() { return sprite; }
+    public ImageView getView() { return sprite; }
+    public Image getImage() { return sprite.getImage(); }
     public Pane getContainer() { return container; }
     public int getX() { return x; }
     public int getY() { return y; }
