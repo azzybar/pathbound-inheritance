@@ -7,7 +7,19 @@ package dev.azzybar.pathbound;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.net.URISyntaxException;
+
+// Gets module version is set
+import java.util.Optional;
+import java.lang.module.ModuleDescriptor;
+
 public final class Config {
+    // App name and version for setting stage title
+    public static final String NAME = "Pathbound: Inheritance";
+    public static final String VERSION = resolveVersion();
+    public static final String TITLE = (VERSION == null)
+                                       ? NAME
+                                       : NAME + " (v" + VERSION + ")";
+
     // For getting styles and dynamic assets
     public static final Path APP_DIR = resolveAppDir();
     public static final String CSS_PATH = Config.class.getResource("/styles/stylesheet.css").toExternalForm();
@@ -41,10 +53,21 @@ public final class Config {
             if (Files.isRegularFile(codeLocation)) {
                 return codeLocation.getParent();
             }
-        } catch (URISyntaxException e) {
-        }
+        } catch (URISyntaxException e) {}
 
         // Running from the compiled class files
         return Path.of("").toAbsolutePath();
+    }
+
+    // Retrieves module version
+    private static String resolveVersion() {
+        ModuleDescriptor descriptor = Config.class.getModule().getDescriptor();
+        if (descriptor != null) {
+            Optional<ModuleDescriptor.Version> moduleVer = descriptor.version();
+            if (moduleVer.isPresent()) {
+                return moduleVer.get().toString();
+            }
+        }
+        return null;
     }
 }

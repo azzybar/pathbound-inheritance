@@ -45,23 +45,13 @@ public final class Main extends Application {
         scene.setOnKeyPressed(game::handleKeyPress);
 
         // Sets stage and title
-        String title = "Pathbound: Inheritance";
-        ModuleDescriptor descriptor = Main.class.getModule().getDescriptor();
-        if (descriptor != null) {
-            Optional<ModuleDescriptor.Version> moduleVer = descriptor.version();
-            if (moduleVer.isPresent()) {
-                title += " (v" + moduleVer.get() + ")";
-            }
-        }
-        stage.setTitle(title);
+        stage.setTitle(Config.TITLE);
         stage.setScene(scene);
         stage.setResizable(false);
         String iconPath = "/styles/icons/icon.png";
         try (InputStream is = Main.class.getResourceAsStream(iconPath)) {
             Objects.requireNonNull(is, "Image InputStream cannot be null");
             stage.getIcons().add(Images.load(is));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         stage.show();
 
