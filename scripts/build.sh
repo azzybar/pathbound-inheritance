@@ -16,7 +16,7 @@ APP_NAME="pathbound"
 VERSION="0.1.2"
 JAVA_VERSION="25"
 MAIN_MODULE="dev.azzybar.pathbound"
-MAIN_CLASS="${MAIN_MODULE}.Project"
+MAIN_CLASS="${MAIN_MODULE}.Main"
 ARCHIVE_NAME="pathbound-inheritance-${VERSION}"
 JAR_NAME="${ARCHIVE_NAME}.jar"
 
