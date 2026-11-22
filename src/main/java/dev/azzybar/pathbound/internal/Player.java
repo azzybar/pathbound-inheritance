@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
-import dev.azzybar.pathbound.Project;
 
 import javafx.scene.image.Image;
 import javafx.animation.TranslateTransition;

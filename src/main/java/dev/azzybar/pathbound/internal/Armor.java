@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
-import dev.azzybar.pathbound.Project;
+import dev.azzybar.pathbound.Config;
 
 /*
 Armor Guide:
@@ -168,16 +168,14 @@ public class Armor extends Item {
     public double getEVA() { return EVA; }
     
     // Adds armor to lists
-    public static void addArmor() {
+    public static void addArmor() throws IOException {
         // Gets path to directory
-        Path armorDir = Project.APP_DIR.resolve("items", "armor.txt");
+        Path armorDir = Config.APP_DIR.resolve("items", "armor.txt");
         System.out.println("Adding armor from: \u001B[36m" + armorDir + "\u001B[0m");
         
         // Goes through Weapons folder
         try (Stream<String> stream = Files.lines(armorDir)) {
             stream.forEach(Armor::configArmor);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         System.out.println("\u001B[92mSuccessfully added armor\u001B[0m");
     }

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
-import dev.azzybar.pathbound.Project;
+import dev.azzybar.pathbound.Config;
 
 /*
 Weight Guide:
@@ -110,9 +110,9 @@ public class Weapon extends Item {
     public double getSPD() { return SPD; }
     
     // Adds weapons to lists
-    public static void addWeapons() {
+    public static void addWeapons() throws IOException {
         // Gets path to directory
-        Path weaponsDir = Project.APP_DIR.resolve("items", "weapons");
+        Path weaponsDir = Config.APP_DIR.resolve("items", "weapons");
         System.out.println("Adding weapons from: \u001B[36m" + weaponsDir + "\u001B[0m");
         
         // Goes through Weapons folder
@@ -121,15 +121,15 @@ public class Weapon extends Item {
                 .filter(p -> !Files.isDirectory(p))
                 .filter(p -> p.getFileName().toString().toLowerCase().endsWith("txt"))
                 .collect(Collectors.toList());
-            files.forEach(Weapon::configWeapon);
-        } catch (IOException e) {
-            e.printStackTrace();
+            for (Path file : files) {
+                Weapon.configWeapon(file);
+            }
         }
         System.out.println("\u001B[92mSuccessfully added weapons\u001B[0m");
     }
     
     // Adds the weapon from the file
-    private static void configWeapon(Path path) {
+    private static void configWeapon(Path path) throws IOException {
         // Goes through each file in the directory
         try (BufferedReader br = Files.newBufferedReader(path)) {
             // Sorts data
@@ -153,8 +153,6 @@ public class Weapon extends Item {
                     polearms.add(weapon);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

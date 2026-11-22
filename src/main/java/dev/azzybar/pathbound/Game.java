@@ -11,12 +11,23 @@ import dev.azzybar.pathbound.internal.Chest;
 import dev.azzybar.pathbound.internal.Armor;
 import dev.azzybar.pathbound.internal.Weapon;
 
-import javafx.stage.Stage;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.scene.text.Font;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+
+import javafx.scene.effect.ColorAdjust;
+import javafx.animation.Interpolator;
+import javafx.animation.SequentialTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyValue;
+import javafx.animation.KeyFrame;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 final class Game {
     private final Pane viewport;
+    private final Group world;
     private final GameMap map;
     private final Player player;
 
@@ -32,37 +44,40 @@ final class Game {
         setupGame();
         this.map = new GameMap();
 
-        // Creates player and sets up viewport
+        // Creates player
         Path playerPath = Config.APP_DIR.resolve("sprites", "player", "player.png");
         try (InputStream is = Files.newInputStream(playerPath)) {
             Objects.requireNonNull(is, "Image InputStream cannot be null");
             this.player = new Player(Images.load(is), 1, 14);
         }
-        this.viewport = new StackPane(
-            this.map.getView(),
-            this.player.getSprite().getContainer());
+
+        // Wrap player and map in group and set viewport
+        this.world = new Group(this.map.getView(),
+                               this.player.getSprite().getContainer());
+        this.world.managedProperty().bind(this.world.visibleProperty());
+        this.viewport = new StackPane(this.world);
         this.viewport.setMouseTransparent(true);
 
         // Adds enemies
         for (Enemy enemy : this.map.getEnemies()) {
-            this.viewport.getChildren()
+            this.world.getChildren()
                 .add(enemy.getSprite().getContainer());
         }
 
         // Adds chests
         for (Chest chest : this.map.getChests()) {
-            this.viewport.getChildren()
+            this.world.getChildren()
                 .add(chest.getSprite().getContainer());
         }
 
         // Adds chest pane
-        this.viewport.getChildren().add(Chest.getPopup());
+        this.world.getChildren().add(Chest.getPopup());
     }
 
     // Handles player movement
-    void handleKeyPress(KeyEvent event, Stage stage) {
+    void handleKeyPress(KeyEvent event) {
         // Checks if player is moving or a popup is open
-        if (player.isMoving() || Chest.popupOpen()) {
+        if (!world.isVisible() || player.isMoving() || Chest.popupOpen()) {
             return;
         }
 
@@ -116,7 +131,7 @@ final class Game {
 
                 // Checks if enemy was defeated already
                 if ((enemyX == x && enemyY == y) && !enemy.wasKilled()) {
-                    new BattleEncounter(player, enemy, stage, map).start();
+                    startBattle(enemy);
                 }
             }
         } else if (mapData[y][x] == 2) {
@@ -138,6 +153,66 @@ final class Game {
         }
     }
 
+    // Create a battle encounter and switch to it
+    private void startBattle(Enemy enemy) {
+        world.setVisible(false);
+        BattleEncounter battle = new BattleEncounter(player,
+                                                     enemy,
+                                                     () -> endBattle(enemy));
+        viewport.getChildren().add(battle.getView());
+        battle.start();
+    }
+
+    // Automatically switches back to map only if battle won
+    private void endBattle(Enemy enemy) {
+        viewport.getChildren().retainAll(world);
+        if (enemy.wasKilled()) {
+            map.removeEnemy(enemy);
+            world.setVisible(true);
+            System.out.println("\u001B[36mSuccessfully switched to map\u001B[0m");
+        } else {
+            gameOver();
+        }
+    }
+
+    // Switches to death screen
+    private void gameOver() {
+        ImageView playerView = Images.createScaledView(player.getSprite().getImage(), 5);
+        Text deathText = new Text("You have succumbed to death.");
+        deathText.setId("death-text");
+
+        // Creates and adds to viewport
+        Pane deathScreen = new StackPane(playerView, deathText);
+        deathScreen.setId("death-screen");
+        viewport.getChildren().add(deathScreen);
+
+        // Slowly grays the player's sprite
+        ColorAdjust grayscale = new ColorAdjust();
+        grayscale.setSaturation(0);
+        playerView.setEffect(grayscale);
+
+        // Creates timeline
+        KeyValue grayValue = new KeyValue(grayscale.saturationProperty(), -1.0);
+        KeyFrame grayFrame = new KeyFrame(Duration.seconds(4), grayValue);
+        Timeline grayTimeline = new Timeline(grayFrame);
+
+        // Makes the text red and opaque
+        FadeTransition fadeText = new FadeTransition(Duration.seconds(5), deathText);
+        fadeText.setFromValue(0);
+        fadeText.setToValue(1);
+        fadeText.setInterpolator(Interpolator.LINEAR);
+
+        // Creates a sequence to play
+        SequentialTransition sequence = new SequentialTransition(
+            new PauseTransition(Duration.seconds(1)),
+            grayTimeline,
+            new PauseTransition(Duration.seconds(1)),
+            fadeText
+        );
+
+        sequence.play();
+    }
+
     // For loading imported fonts and other items
     private void setupGame() throws IOException {
         // File path for fonts directory
@@ -149,8 +224,6 @@ final class Game {
                 font = Font.loadFont(is, 10);
                 System.out.println("\u001B[92mSuccessfully loaded " + font.getName() + "\u001B[0m");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         // Loads items (armor and weapons) and map

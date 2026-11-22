@@ -42,7 +42,7 @@ public final class Main extends Application {
             Color.BLACK);
         scene.setCursor(Cursor.NONE);
         scene.getStylesheets().add(Config.CSS_PATH);
-        scene.setOnKeyPressed(event -> game.handleKeyPress(event, stage));
+        scene.setOnKeyPressed(game::handleKeyPress);
 
         // Sets stage and title
         String title = "Pathbound: Inheritance";

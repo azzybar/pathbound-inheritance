@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.Config;
 
 // Scaling images during battles
 import javafx.scene.image.Image;
@@ -15,7 +16,7 @@ import java.io.InputStream;
 
 public final class Images {
     // Sprites should be smaller than tile size
-    public static final double SPRITE_SIZE = GameMap.TILE_SIZE * 0.875;
+    public static final double SPRITE_SIZE = Config.TILE_SIZE * 0.875;
 
     // Options regarding images and imageviews
     private static final boolean PRESERVE_RATIO = true;
@@ -41,7 +42,7 @@ public final class Images {
 
     // Creates views for tiles and sprites
     public static ImageView createTile() {
-        return createView(null, GameMap.TILE_SIZE);
+        return createView(null, Config.TILE_SIZE);
     }
 
     public static ImageView createSprite(Image image) {

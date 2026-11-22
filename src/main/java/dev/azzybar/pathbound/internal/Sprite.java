@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
-import dev.azzybar.pathbound.Project;
+import dev.azzybar.pathbound.Config;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
@@ -48,8 +48,8 @@ public class Sprite {
     
     // Updates visual position
     public void updatePosition(int x, int y) {
-        this.pixelX = x * GameMap.TILE_SIZE;
-        this.pixelY = y * GameMap.TILE_SIZE;
+        this.pixelX = x * Config.TILE_SIZE;
+        this.pixelY = y * Config.TILE_SIZE;
     }
     
     // Getters
