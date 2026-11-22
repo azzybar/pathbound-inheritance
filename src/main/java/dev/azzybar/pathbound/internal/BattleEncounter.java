@@ -30,6 +30,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 /**
  * This is mean to be an associaton class, a regular class
  * that holds information regarding the relationship between
@@ -51,10 +53,10 @@ public class BattleEncounter {
     private Button item;
     private Button pray;
     
-    private final Player player;;
+    private final Player player;
     
     private final Enemy enemy;
-    private Sprite enemySprite;
+    private ImageView enemyView;
     
     // 0 = Player's turn, 1 = Enemy's turn
     private int turnOrder;
@@ -86,7 +88,7 @@ public class BattleEncounter {
         
         // Creates a deep copy of enemy sprite
         this.enemy = enemy;
-        this.enemySprite = new Sprite(enemy.getName(), enemy.getSprite());
+        this.enemyView = Images.createScaledView(enemy.getSprite().getImage(), 5);
         
         // Creates battle scene and stores main scene
         this.STAGE = stage;
@@ -220,8 +222,7 @@ public class BattleEncounter {
             System.out.println("\u001B[36mSuccessfully switched to map\u001B[0m");
         } else {
             // Creates death screen
-            ImageView playerSprite = player.getSprite().getView();
-            playerSprite.setSmooth(false);
+            ImageView playerSprite = Images.createScaledView(player.getSprite().getImage(), 5);
             Text deathText = new Text("You have succumbed to death.");
             deathText.setId("death-text");
             
@@ -277,8 +278,8 @@ public class BattleEncounter {
         BorderPane root = new BorderPane();
         root.setMouseTransparent(true);
         
-        StackPane center = new StackPane(enemySprite.getView(), battleText);
-        center.setAlignment(enemySprite.getView(), Pos.CENTER);
+        StackPane center = new StackPane(enemyView, battleText);
+        center.setAlignment(enemyView, Pos.CENTER);
         center.setAlignment(battleText, Pos.BOTTOM_CENTER);
         root.setCenter(center);
         
@@ -307,8 +308,22 @@ public class BattleEncounter {
         STAGE.setScene(scene);
         
         // Adjusts margins
-        center.setMargin(enemySprite.getView(), new Insets(0, 0, (GameMap.TILE_SIZE * 3), 0));
-        battleGUI.setMargin(player.status().get(), new Insets(GameMap.TILE_SIZE / 2, 0, 0, 50));
+        center.setMargin(enemyView, new Insets(0, 0, (GameMap.TILE_SIZE * 3), 0));
+        battleGUI.setMargin(player.status().get(), new Insets(GameMap.TILE_SIZE / 2.0, 0, 0, 50));
+
+        // Offset enemy view to keep pixels sharp
+        enemyView.translateXProperty().bind(
+            Bindings.createDoubleBinding(
+                () -> Math.round(enemyView.getLayoutX()) - enemyView.getLayoutX(),
+                enemyView.layoutXProperty()
+            )
+        );
+        enemyView.translateYProperty().bind(
+            Bindings.createDoubleBinding(
+                () -> Math.round(enemyView.getLayoutY()) - enemyView.getLayoutY(),
+                enemyView.layoutYProperty()
+            )
+        );
         
         // Goes through the action buttons
         for (Node node : actionMenu.getChildren()) {

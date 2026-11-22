@@ -20,10 +20,9 @@ public class Sprite {
     private double pixelY;
     
     // Constructor
-    public Sprite(Image img, int x, int y) {
+    public Sprite(Image image, int x, int y) {
         // Creates entity sprite
-        this.sprite = new ImageView(img);
-        this.sprite.setSmooth(false);
+        this.sprite = Images.createSprite(image);
         this.container = new Pane(sprite);
         
         // Sets default position (centers player sprite)
@@ -35,18 +34,9 @@ public class Sprite {
     }
     
     // Copy constructor (deep copy, for battles)
-    public Sprite(String name, Sprite that) {
+    public Sprite(Sprite that) {
         // Copies the sprite itself and the container
-        String path = Project.APP_DIR.resolve("sprites",
-                                              (name.equals("player") ? "player" : "enemies"),
-                                              (name + ".png"))
-                                     .toUri()
-                                     .toString();
-        this.sprite = new ImageView(new Image(path,
-                                              GameMap.TILE_SIZE,
-                                              GameMap.TILE_SIZE,
-                                              true, true));
-        this.sprite.setSmooth(false);
+        this.sprite = Images.createSprite(that.getImage());
         this.container = new Pane(sprite);
         
         // Sets to 0 (not map-dependent)

@@ -12,8 +12,8 @@ public class Enemy extends Entity {
     private boolean wasKilled;
     
     // Constructor
-    public Enemy(Image img, int x, int y, String name) {
-        super(img, x, y);
+    public Enemy(Image image, int x, int y, String name) {
+        super(image, x, y);
         this.name = name;
         
         // Randomizes stats (with upper and lower limits)

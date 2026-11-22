@@ -11,12 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 // Used for setting up the map
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 // For map images and setting up lists
 import java.util.Map;
@@ -126,8 +128,7 @@ public class GameMap {
         System.out.println("Initializing new game map");
         for (int row = 0; row < WIDTH; row++) {
             for (int col = 0; col < HEIGHT; col++) {
-                ImageView tile = new ImageView();
-                tile.setSmooth(false);
+                ImageView tile = Images.createTile();
                 
                 // Path for ending or starting
                 if ((col == 0 && row == 18) || 
@@ -228,8 +229,7 @@ public class GameMap {
         
         // Narrows path options
         int r = 0;
-        ImageView tile = new ImageView();
-        tile.setSmooth(false);
+        ImageView tile = Images.createTile();
         switch (openPaths) {
             case 1:
                 // End paths (for enemies)
@@ -371,14 +371,14 @@ public class GameMap {
         name = name.substring(0, name.indexOf(".png"));
         
         // Adds to hash map
-        try {
+        try (InputStream is = Files.newInputStream(path)) {
+            Objects.requireNonNull(is, "Image InputStream cannot be null");
+            Image image = Images.load(is);
             if (type.equals("map")) {
                 // Adds to map hash
-                Image image = new Image(Files.newInputStream(path), TILE_SIZE, TILE_SIZE, true, true);
                 mapTiles.put(name, image);
             } else {
                 // Adds to sprite hash
-                Image image = new Image(Files.newInputStream(path), (TILE_SIZE * 0.875), (TILE_SIZE * 0.875), true, true);
                 sprites.put(name, image);
             }
         } catch (IOException e) {

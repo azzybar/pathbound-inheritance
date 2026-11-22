@@ -18,16 +18,9 @@ public class Player extends Entity {
     private Weapon weapon;
     
     // Constructor
-    public Player(int x, int y) {
-        String playerPath = Project.APP_DIR
-                                  .resolve("sprites", "player", "player.png")
-                                  .toUri()
-                                  .toString();
-        super(new Image(playerPath,
-                        GameMap.TILE_SIZE,
-                        GameMap.TILE_SIZE,
-                        true, true),
-              x, y);
+    public Player(Image image, int x, int y) {
+        super(image, x, y);
+
         this.isMoving = false;
         this.status = new HpStatus(this);
         this.armor = new Armor[4];

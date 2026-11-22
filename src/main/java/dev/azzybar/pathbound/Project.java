@@ -3,6 +3,7 @@
 
 package dev.azzybar.pathbound;
 import dev.azzybar.pathbound.internal.GameMap;
+import dev.azzybar.pathbound.internal.Images;
 import dev.azzybar.pathbound.internal.Chest;
 import dev.azzybar.pathbound.internal.Enemy;
 import dev.azzybar.pathbound.internal.Player;
@@ -22,12 +23,13 @@ import javafx.scene.text.Font;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
-// Used for loading font and getting app dir
+// Used for getting app dir and loading assets
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 // For enemy list
 import java.util.List;
@@ -54,7 +56,12 @@ public class Project extends Application {
         setupGame();
         
         // Creates player and sets up root
-        player = new Player(1, 14);
+        Path playerPath = APP_DIR.resolve("sprites", "player", "player.png");
+        try (InputStream is = Files.newInputStream(playerPath)) {
+            player = new Player(Images.load(is), 1, 14);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         StackPane root = new StackPane(
             map.getView(),
             player.getSprite().getContainer());
@@ -99,9 +106,8 @@ public class Project extends Application {
         stage.setResizable(false);
         String iconPath = "/styles/icons/icon.png";
         try (InputStream is = Project.class.getResourceAsStream(iconPath)) {
-            if (is != null) {
-                stage.getIcons().add(new Image(is));
-            }
+            Objects.requireNonNull(is, "Image InputStream cannot be null");
+            stage.getIcons().add(Images.load(is));
         } catch (IOException e) {
             e.printStackTrace();
         }
