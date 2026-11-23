@@ -13,7 +13,7 @@ PROJECT="Pathbound: Inheritance"
 DESCRIPTION="Pathbound: Inheritance - Originally a high school project made under 2 weeks"
 
 APP_NAME="pathbound"
-VERSION="0.1.3"
+VERSION="0.2.0"
 JAVA_VERSION="25"
 MAIN_MODULE="dev.azzybar.pathbound"
 MAIN_CLASS="${MAIN_MODULE}.Main"
