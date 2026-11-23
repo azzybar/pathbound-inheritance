@@ -58,6 +58,11 @@ final class Game {
         this.viewport = new StackPane(this.world);
         this.viewport.setMouseTransparent(true);
 
+        // Sets fixed viewport size
+        this.viewport.setPrefSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+        this.viewport.setMinSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+        this.viewport.setMaxSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+
         // Adds enemies
         for (Enemy enemy : this.map.getEnemies()) {
             this.world.getChildren()

@@ -240,13 +240,13 @@ public class BattleEncounter {
         // Offset enemy view to keep pixels sharp
         enemyView.translateXProperty().bind(
             Bindings.createDoubleBinding(
-                () -> Math.round(enemyView.getLayoutX()) - enemyView.getLayoutX(),
+                () -> Math.ceil(enemyView.getLayoutX()) - enemyView.getLayoutX(),
                 enemyView.layoutXProperty()
             )
         );
         enemyView.translateYProperty().bind(
             Bindings.createDoubleBinding(
-                () -> Math.round(enemyView.getLayoutY()) - enemyView.getLayoutY(),
+                () -> Math.ceil(enemyView.getLayoutY()) - enemyView.getLayoutY(),
                 enemyView.layoutYProperty()
             )
         );

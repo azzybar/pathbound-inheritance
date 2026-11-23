@@ -33,6 +33,11 @@ public final class Config {
     public static final double NATIVE_WIDTH = TILE_SIZE * WIDTH;
     public static final double NATIVE_HEIGHT = TILE_SIZE * HEIGHT;
 
+    // Default resolution at window launch (960x720)
+    public static final double DEFAULT_SCALE = 1.5;
+    public static final double DEFAULT_WIDTH = NATIVE_WIDTH * DEFAULT_SCALE;
+    public static final double DEFAULT_HEIGHT = NATIVE_HEIGHT * DEFAULT_SCALE;
+
     // Prevents outside instantiation
     private Config() {}
 
