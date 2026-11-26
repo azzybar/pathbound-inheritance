@@ -3,7 +3,6 @@
 
 package dev.azzybar.pathbound;
 import dev.azzybar.pathbound.internal.Images;
-import dev.azzybar.pathbound.internal.Chest;
 
 // Required for setting up the application
 import javafx.application.Application;
@@ -116,9 +115,6 @@ public final class Main extends Application {
         // Run whenever stage or scene changes
         stage.heightProperty().addListener(borderListener);
         scene.heightProperty().addListener(borderListener);
-
-        // Post-show adjustments
-        Chest.setMargins();
     }
 
     public static void main(String[] args) {

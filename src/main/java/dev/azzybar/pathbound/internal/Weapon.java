@@ -31,7 +31,6 @@ POLEARMS
 "halberd" - 1d10, 6lb
 "lance" - 1d10, 6lb
 */
-import javafx.scene.control.Label;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,7 +38,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
 public class Weapon extends Item {
     // Weapon categories
     private static ArrayList<Weapon> bludgeons = new ArrayList<Weapon>();
@@ -86,15 +84,13 @@ public class Weapon extends Item {
     
     // For printing stats in the chest popup
     @Override
-    public Label[] getStats() {
-        Label[] stats = new Label[3];
+    public String[] getStats() {
+        String[] stats = new String[3];
         
         // Creates labels to be presented in chest popup
-        stats[0] = new Label("You found a " + getName());
-        stats[1] = new Label(
-            String.format("DMG: 1d%d", DMG));
-        stats[2] = new Label(
-            String.format("SPD: -%d%%", ((int) (SPD * 100))));
+        stats[0] = "You found a " + getName();
+        stats[1] = String.format("DMG: 1d%d", DMG);
+        stats[2] = String.format("SPD: -%d%%", ((int) (SPD * 100)));
             
         return stats;
     }
@@ -120,7 +116,7 @@ public class Weapon extends Item {
             List<Path> files = stream
                 .filter(p -> !Files.isDirectory(p))
                 .filter(p -> p.getFileName().toString().toLowerCase().endsWith("txt"))
-                .collect(Collectors.toList());
+                .toList();
             for (Path file : files) {
                 Weapon.configWeapon(file);
             }

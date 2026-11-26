@@ -3,5 +3,8 @@
 
 module dev.azzybar.pathbound {
     requires javafx.controls;
+    requires javafx.fxml;
+
+    opens dev.azzybar.pathbound.ui to javafx.fxml;
     exports dev.azzybar.pathbound;
 }

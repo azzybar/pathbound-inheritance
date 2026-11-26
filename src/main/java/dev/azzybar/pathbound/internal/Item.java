@@ -6,7 +6,6 @@ package dev.azzybar.pathbound.internal;
 // Meant to be able to return either a weapon or piece
 // of a armor from a chest. Also for any future item
 // subclasses if developed.
-import javafx.scene.control.Label;
 public abstract class Item {
     private final String name;
     
@@ -16,7 +15,7 @@ public abstract class Item {
     }
     
     // Override based on item
-    public abstract Label[] getStats();
+    public abstract String[] getStats();
     
     // Getters
     public String getName() { return name; }

@@ -10,7 +10,9 @@ import dev.azzybar.pathbound.internal.Enemy;
 import dev.azzybar.pathbound.internal.Chest;
 import dev.azzybar.pathbound.internal.Armor;
 import dev.azzybar.pathbound.internal.Weapon;
+import dev.azzybar.pathbound.ui.ChestPopupController;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -36,13 +38,19 @@ import java.nio.file.Path;
 import java.util.Objects;
 final class Game {
     private final Pane viewport;
+    private final Pane overworldSet;
     private final Group world;
     private final GameMap map;
     private final Player player;
+    private final ChestPopupController chestPopup;
 
     Game() throws IOException {
         setupGame();
         this.map = new GameMap();
+
+        // Overarching for non-battle ui and sprites
+        this.overworldSet = new StackPane();
+        this.overworldSet.managedProperty().bind(this.overworldSet.visibleProperty());
 
         // Creates player
         Path playerPath = Config.APP_DIR.resolve("sprites", "player", "player.png");
@@ -51,17 +59,10 @@ final class Game {
             this.player = new Player(Images.load(is), 1, 14);
         }
 
-        // Wrap player and map in group and set viewport
+        // Wrap player and map in group and add to overworld
         this.world = new Group(this.map.getView(),
                                this.player.getSprite().getContainer());
-        this.world.managedProperty().bind(this.world.visibleProperty());
-        this.viewport = new StackPane(this.world);
-        this.viewport.setMouseTransparent(true);
-
-        // Sets fixed viewport size
-        this.viewport.setPrefSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
-        this.viewport.setMinSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
-        this.viewport.setMaxSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+        this.overworldSet.getChildren().add(this.world);
 
         // Adds enemies
         for (Enemy enemy : this.map.getEnemies()) {
@@ -75,14 +76,27 @@ final class Game {
                 .add(chest.getSprite().getContainer());
         }
 
-        // Adds chest pane
-        this.world.getChildren().add(Chest.getPopup());
+        // Creates and adds the chest popup
+        FXMLLoader loader = new FXMLLoader(Game.class.getResource("/fxml/chest-popup.fxml"));
+        this.overworldSet.getChildren().add(loader.load());
+        this.chestPopup = loader.getController();
+        this.chestPopup.setPlayer(player);
+
+
+        // Wraps everything to be a fixed size
+        this.viewport = new StackPane(this.overworldSet);
+        this.viewport.setMouseTransparent(true);
+
+        // Sets fixed viewport size
+        this.viewport.setPrefSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+        this.viewport.setMinSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
+        this.viewport.setMaxSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
     }
 
     // Handles player movement
     void handleKeyPress(KeyEvent event) {
         // Checks if player is moving or a popup is open
-        if (!world.isVisible() || player.isMoving() || Chest.popupOpen()) {
+        if (!world.isVisible() || player.isMoving() || chestPopup.isShowing()) {
             return;
         }
 
@@ -148,7 +162,7 @@ final class Game {
 
                 // Checks if the position (key) matches
                 if (chestX == x && chestY == y) {
-                    chest.show(player);
+                    chestPopup.show(chest);
                 }
             }
         } else {
@@ -170,7 +184,7 @@ final class Game {
 
     // Automatically switches back to map only if battle won
     private void endBattle(Enemy enemy) {
-        viewport.getChildren().retainAll(world);
+        viewport.getChildren().retainAll(overworldSet);
         if (enemy.wasKilled()) {
             map.removeEnemy(enemy);
             world.setVisible(true);

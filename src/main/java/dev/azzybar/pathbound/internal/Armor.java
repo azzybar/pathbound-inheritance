@@ -28,7 +28,6 @@ FORMULA
 - SPD: Weight
 - EVA: sqrt(Weight) / 100
 */
-import javafx.scene.control.Label;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -36,7 +35,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
 public class Armor extends Item {
     /*
     0, (AC * 1.1), SPD, (Math.sqrt(EVA) / 100)),
@@ -112,18 +110,14 @@ public class Armor extends Item {
     
     // For printing stats in the chest popup
     @Override
-    public Label[] getStats() {
-        Label[] stats = new Label[4];
+    public String[] getStats() {
+        String[] stats = new String[4];
         
         // Creates labels to be presented in chest popup
-        stats[0] = new Label((piece <= 1 ? 
-            "You found a " : "You found ") + this);
-        stats[1] = new Label(
-            String.format("DEF: +%.1f%%", (DEF * 100)));
-        stats[2] = new Label(
-            String.format("SPD: -%.1f%%", (SPD * 100)));
-        stats[3] = new Label(
-            String.format("EVA: -%.1f%%", (EVA * 100)));
+        stats[0] = (piece <= 1 ? "You found a " : "You found ") + this;
+        stats[1] = String.format("DEF: +%.1f%%", (DEF * 100));
+        stats[2] = String.format("SPD: -%.1f%%", (SPD * 100));
+        stats[3] = String.format("EVA: -%.1f%%", (EVA * 100));
             
         return stats;
     }

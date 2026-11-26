@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
 import java.util.Objects;
 
 // For map images and setting up lists
@@ -351,7 +350,7 @@ public class GameMap {
             List<Path> files = stream
                 .filter(p -> !Files.isDirectory(p))
                 .filter(p -> p.getFileName().toString().toLowerCase().endsWith("png"))
-                .collect(Collectors.toList());
+                .toList();
             for (Path file : files) {
                 processImage(file, (type.equals("map") ? "map" : "sprite"));
             }

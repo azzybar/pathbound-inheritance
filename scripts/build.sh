@@ -16,12 +16,14 @@ APP_NAME="pathbound"
 VERSION="0.2.0"
 JAVA_VERSION="25"
 MAIN_MODULE="dev.azzybar.pathbound"
+MAIN_MODULE_DIR="${MAIN_MODULE//./\/}"
 MAIN_CLASS="${MAIN_MODULE}.Main"
 ARCHIVE_NAME="pathbound-inheritance-${VERSION}"
 JAR_NAME="${ARCHIVE_NAME}.jar"
 
 APP_DIR='-Dapp.dir=$APPDIR'
-NATIVE_ACCESS="'--enable-native-access=javafx.graphics'"
+NATIVE_ACCESS='--enable-native-access=javafx.graphics'
+JAVAFX_MODULES='javafx.controls,javafx.fxml'
 
 SRC_DIR="src/main"
 JAVA_DIR="${SRC_DIR}/java"
@@ -49,8 +51,9 @@ javac --release "${JAVA_VERSION}" \
       --module-path "${JAVAFX_SDK}" \
       -d "${CLASSES_DIR}" \
       "${JAVA_DIR}/module-info.java" \
-      "${JAVA_DIR}/dev/azzybar/pathbound/"*.java \
-      "${JAVA_DIR}/dev/azzybar/pathbound/internal/"*.java
+      "${JAVA_DIR}/${MAIN_MODULE_DIR}/"*.java \
+      "${JAVA_DIR}/${MAIN_MODULE_DIR}/internal/"*.java \
+      "${JAVA_DIR}/${MAIN_MODULE_DIR}/ui/"*.java
 cp -r "${RESOURCES_DIR}/"* "${CLASSES_DIR}/"
 
 echo "Creating ${JAR_NAME}..."
@@ -63,7 +66,7 @@ jar --create \
 if [[ ! -d "${RUNTIME_DIR}" ]]; then
     echo "Building custom JRE for JavaFX..."
     jlink --module-path "${JAVA_HOME}/jmods:${JAVAFX_JMODS}" \
-          --add-modules javafx.controls \
+          --add-modules "${JAVAFX_MODULES}" \
           --no-header-files \
           --no-man-pages \
           --strip-debug \
