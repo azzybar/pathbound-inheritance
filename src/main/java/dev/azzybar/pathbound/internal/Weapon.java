@@ -38,11 +38,12 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+
 public class Weapon extends Item {
     // Weapon categories
-    private static ArrayList<Weapon> bludgeons = new ArrayList<Weapon>();
-    private static ArrayList<Weapon> bladed = new ArrayList<Weapon>();
-    private static ArrayList<Weapon> polearms = new ArrayList<Weapon>();
+    private static List<Weapon> bludgeons = new ArrayList<Weapon>();
+    private static List<Weapon> bladed = new ArrayList<Weapon>();
+    private static List<Weapon> polearms = new ArrayList<Weapon>();
     
     // Damage is calculated as a random number from 1 to DMG
     // Weapons affect an entity's initiative (via weight)
@@ -115,7 +116,7 @@ public class Weapon extends Item {
         try (Stream<Path> stream = Files.walk(weaponsDir)) {
             List<Path> files = stream
                 .filter(p -> !Files.isDirectory(p))
-                .filter(p -> p.getFileName().toString().toLowerCase().endsWith("txt"))
+                .filter(p -> p.getFileName().toString().toLowerCase().endsWith(Config.CONFIG_EXT))
                 .toList();
             for (Path file : files) {
                 Weapon.configWeapon(file);

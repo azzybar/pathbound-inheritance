@@ -35,6 +35,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+
 public class Armor extends Item {
     /*
     0, (AC * 1.1), SPD, (Math.sqrt(EVA) / 100)),
@@ -164,7 +165,7 @@ public class Armor extends Item {
     // Adds armor to lists
     public static void addArmor() throws IOException {
         // Gets path to directory
-        Path armorDir = Config.APP_DIR.resolve("items", "armor.txt");
+        Path armorDir = Config.APP_DIR.resolve("items", "armor" + Config.CONFIG_EXT);
         System.out.println("Adding armor from: \u001B[36m" + armorDir + "\u001B[0m");
         
         // Goes through Weapons folder

@@ -29,8 +29,8 @@ public class Sprite {
         this.x = x;
         this.y = y;
         updatePosition(x, y);
-        sprite.setTranslateX(pixelX);
-        sprite.setTranslateY(pixelY);
+        this.container.setTranslateX(pixelX);
+        this.container.setTranslateY(pixelY);
     }
     
     // Copy constructor (deep copy, for battles)

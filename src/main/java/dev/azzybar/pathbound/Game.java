@@ -7,9 +7,9 @@ import dev.azzybar.pathbound.internal.GameMap;
 import dev.azzybar.pathbound.internal.BattleEncounter;
 import dev.azzybar.pathbound.internal.Player;
 import dev.azzybar.pathbound.internal.Enemy;
-import dev.azzybar.pathbound.internal.Chest;
 import dev.azzybar.pathbound.internal.Armor;
 import dev.azzybar.pathbound.internal.Weapon;
+import dev.azzybar.pathbound.internal.Chest;
 import dev.azzybar.pathbound.ui.ChestPopupController;
 
 import javafx.fxml.FXMLLoader;
@@ -17,7 +17,6 @@ import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.scene.text.Font;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
@@ -36,6 +35,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+
 final class Game {
     private final Pane viewport;
     private final Pane overworldSet;
@@ -45,7 +45,9 @@ final class Game {
     private final ChestPopupController chestPopup;
 
     Game() throws IOException {
-        setupGame();
+        // Add items
+        Armor.addArmor();
+        Weapon.addWeapons();
         this.map = new GameMap();
 
         // Overarching for non-battle ui and sprites
@@ -53,7 +55,7 @@ final class Game {
         this.overworldSet.managedProperty().bind(this.overworldSet.visibleProperty());
 
         // Creates player
-        Path playerPath = Config.APP_DIR.resolve("sprites", "player", "player.png");
+        Path playerPath = Config.APP_DIR.resolve("sprites", "player", "player" + Config.IMAGE_EXT);
         try (InputStream is = Files.newInputStream(playerPath)) {
             Objects.requireNonNull(is, "Image InputStream cannot be null");
             this.player = new Player(Images.load(is), 1, 14);
@@ -73,11 +75,13 @@ final class Game {
         // Adds chests
         for (Chest chest : this.map.getChests()) {
             this.world.getChildren()
-                .add(chest.getSprite().getContainer());
+                .add(chest.getContainer());
         }
 
         // Creates and adds the chest popup
-        FXMLLoader loader = new FXMLLoader(Game.class.getResource("/fxml/chest-popup.fxml"));
+        FXMLLoader loader = new FXMLLoader(
+                            Game.class.getResource(
+                            ChestPopupController.FXML_PATH));
         this.overworldSet.getChildren().add(loader.load());
         this.chestPopup = loader.getController();
         this.chestPopup.setPlayer(player);
@@ -156,12 +160,8 @@ final class Game {
         } else if (mapData[y][x] == 2) {
             // Goes through the chests list
             for (Chest chest : map.getChests()) {
-                // Gets chest's position
-                int chestX = chest.getSprite().getX();
-                int chestY = chest.getSprite().getY();
-
                 // Checks if the position (key) matches
-                if (chestX == x && chestY == y) {
+                if (chest.getX() == x && chest.getY() == y) {
                     chestPopup.show(chest);
                 }
             }
@@ -230,24 +230,6 @@ final class Game {
         );
 
         sequence.play();
-    }
-
-    // For loading imported fonts and other items
-    private void setupGame() throws IOException {
-        // File path for fonts directory
-        Font font;
-        String fontPath = "/styles/fonts/EagleLake-Regular.ttf";
-        System.out.println("Loading font \u001B[36m" + fontPath + "\u001B[0m");
-        try (InputStream is = Game.class.getResourceAsStream(fontPath)) {
-            if (is != null) {
-                font = Font.loadFont(is, 10);
-                System.out.println("\u001B[92mSuccessfully loaded " + font.getName() + "\u001B[0m");
-            }
-        }
-
-        // Loads items (armor and weapons) and map
-        Armor.addArmor();
-        Weapon.addWeapons();
     }
 
     // Getters

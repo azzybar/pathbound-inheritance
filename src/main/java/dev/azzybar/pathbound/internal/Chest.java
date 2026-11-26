@@ -2,19 +2,28 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.Config;
 
+// For the chest image and container
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
+
+// Loading the image to the chest
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+// Static information about items generated
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
+
 public class Chest {
+    private static final Path PATH = Config.APP_DIR.resolve("maps", "images", "chest" + Config.IMAGE_EXT);
+
     // Keeps tracks of what chests have what
     private static int numOfChests = 0;
     private static int[] itemLimit = new int[2];
@@ -27,17 +36,30 @@ public class Chest {
     private static List<Armor> armorList = new ArrayList<Armor>();
     private static List<Weapon> weaponsList = new ArrayList<Weapon>();
     
-    // Sprite
-    private Sprite sprite;
+    // Container holding chest image
+    private final ImageView view;
+    private final Pane container;
     
-    // Information regarding contents
+    // Information regarding contents and location
     private Item item;
-    private boolean wasOpened;
+    private final int x;
+    private final int y;
     
     // Constructor
-    public Chest(Image img, int x, int y) {
-        this.sprite = new Sprite(img, x, y);
-        this.wasOpened = false;
+    public Chest(int x, int y) throws IOException {
+        // Load chest image
+        try (InputStream is = Files.newInputStream(PATH)) {
+            Objects.requireNonNull(is, "Image InputStream cannot be null");
+            Image image = Images.load(is);
+            this.view = Images.createView(image, Config.TILE_SIZE);
+            this.container = new Pane(this.view);
+        }
+
+        // Sets position of chest on map
+        this.x = x;
+        this.y = y;
+        this.container.setTranslateX(this.x * Config.TILE_SIZE);
+        this.container.setTranslateY(this.y * Config.TILE_SIZE);
         
         // Decides which loot to hold
         int loot = (int) (Math.random() * 2);
@@ -88,8 +110,8 @@ public class Chest {
     private void close() {
         ColorAdjust grayscale = new ColorAdjust();
         grayscale.setSaturation(-1.0);
-        sprite.getView().setEffect(grayscale);
-        wasOpened = true;
+        view.setEffect(grayscale);
+        item = null;
     }
     
     // Randomizes armor (simple recursive function)
@@ -146,9 +168,11 @@ public class Chest {
     }
     
     // Getters
-    public Sprite getSprite() { return sprite; }
+    public Pane getContainer() { return container; }
     public Item getItem() { return item; }
-    public boolean wasOpened() { return wasOpened; }
+    public boolean wasOpened() { return item == null; }
+    public int getX() { return x; }
+    public int getY() { return y; }
     
     // Updates chest count (done before chests are created)
     public static void updateCount() {

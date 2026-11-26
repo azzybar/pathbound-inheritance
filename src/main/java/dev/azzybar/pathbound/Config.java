@@ -20,9 +20,13 @@ public final class Config {
                                        ? NAME
                                        : NAME + " (v" + VERSION + ")";
 
-    // For getting styles and dynamic assets
+    // For getting styles, and dynamic and embedded assets
     public static final Path APP_DIR = resolveAppDir();
     public static final String CSS_PATH = Config.class.getResource("/styles/stylesheet.css").toExternalForm();
+
+    // File extensions regarding configuration and image files
+    public static final String CONFIG_EXT = ".txt";
+    public static final String IMAGE_EXT = ".png";
 
     // Information about tile size and map dimensions
     public static final int TILE_SIZE = 32;

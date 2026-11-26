@@ -72,7 +72,7 @@ public class Player extends Entity {
         sprite.updatePosition(x, y);
         
         // Creates a linear transition to move player
-        TranslateTransition translate = new TranslateTransition(Duration.millis(100), sprite.getView());
+        TranslateTransition translate = new TranslateTransition(Duration.millis(100), sprite.getContainer());
         translate.setToX(sprite.getPixelX());
         translate.setToY(sprite.getPixelY());
         translate.setInterpolator(Interpolator.LINEAR);

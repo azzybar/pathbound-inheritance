@@ -10,7 +10,6 @@ import dev.azzybar.pathbound.internal.Weapon;
 
 // Connecting to and using chest-popup.fxml
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
@@ -18,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 
 public final class ChestPopupController {
+    public static final String FXML_PATH = "/fxml/chest-popup.fxml";
+
     // Gets passed the specific chest and player
     private Player player;
     private Chest chest;

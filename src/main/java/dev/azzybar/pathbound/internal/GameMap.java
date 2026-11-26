@@ -4,9 +4,8 @@
 package dev.azzybar.pathbound.internal;
 import dev.azzybar.pathbound.Config;
 
+// Creating the map tiles and spprites
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -143,10 +142,9 @@ public class GameMap {
                         break;
                     case 2:
                         // Creates a chest object
-                        Chest chest = new Chest(mapTiles.get("chest"), row, col);
+                        Chest chest = new Chest(row, col);
                         chests.add(chest);
-                        Rectangle spot = new Rectangle(Config.TILE_SIZE, Config.TILE_SIZE, Color.BLACK);
-                        map.add(spot, row, col);
+                        map.add(chest.getContainer(), row, col);
                         break;
                     case 3:
                         // Randomly picks grass or rock tile
@@ -349,7 +347,7 @@ public class GameMap {
         try (Stream<Path> stream = Files.walk(dir)) {
             List<Path> files = stream
                 .filter(p -> !Files.isDirectory(p))
-                .filter(p -> p.getFileName().toString().toLowerCase().endsWith("png"))
+                .filter(p -> p.getFileName().toString().toLowerCase().endsWith(Config.IMAGE_EXT))
                 .toList();
             for (Path file : files) {
                 processImage(file, (type.equals("map") ? "map" : "sprite"));
@@ -363,7 +361,10 @@ public class GameMap {
     private void processImage(Path path, String type) throws IOException {
         // Cuts name to just a descriptor
         String name = path.getFileName().toString();
-        name = name.substring(0, name.indexOf(".png"));
+        name = name.substring(0, name.indexOf(Config.IMAGE_EXT));
+
+        // Skip loading chest image
+        if (name.equals("chest")) { return; }
         
         // Adds to hash map
         try (InputStream is = Files.newInputStream(path)) {
