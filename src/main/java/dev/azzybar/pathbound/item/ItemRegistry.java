@@ -1,8 +1,9 @@
 // Copyright 2026 Azrael Baram (azzybar)
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.azzybar.pathbound.internal;
+package dev.azzybar.pathbound.item;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -23,8 +24,13 @@ public final class ItemRegistry {
                     .toList();
     }
 
+    // Calls the same method in ItemLoader
+    public static void loadAll() throws IOException {
+        ItemLoader.loadAll();
+    }
+
     // Adds item to list if not already added
-    public static void register(Item item) {
+    static void register(Item item) {
         if (!items.contains(item)) {
             items.add(item);
         }

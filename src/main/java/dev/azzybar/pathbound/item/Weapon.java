@@ -1,7 +1,7 @@
 // Copyright 2026 Azrael Baram (azzybar)
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.azzybar.pathbound.internal;
+package dev.azzybar.pathbound.item;
 
 /*
 Weight Guide:

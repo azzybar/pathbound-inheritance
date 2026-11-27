@@ -1,7 +1,7 @@
 // Copyright 2026 Azrael Baram (azzybar)
 // SPDX-License-Identifier: Apache-2.0
 
-package dev.azzybar.pathbound.internal;
+package dev.azzybar.pathbound.item;
 import dev.azzybar.pathbound.Config;
 
 // For handling and reading files
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import java.util.function.Function;
 import java.util.List;
 
-public final class ItemLoader {
+final class ItemLoader {
     // Paths leading to each item config file
     private static final Path armorPath =  Config.APP_DIR.resolve("items", "armor" + Config.ITEM_EXT);
     private static final Path weaponsPath =  Config.APP_DIR.resolve("items", "weapons" + Config.ITEM_EXT);
@@ -20,8 +20,8 @@ public final class ItemLoader {
     // Prevents other classes from instantiating this
     private ItemLoader() {}
 
-    // Main driver that automatically loads all files
-    public static void loadAll() throws IOException {
+    // Is called by the registry to populate it
+    static void loadAll() throws IOException {
         load(armorPath, ItemLoader::parseArmor);
         load(weaponsPath, ItemLoader::parseWeapons);
     }
