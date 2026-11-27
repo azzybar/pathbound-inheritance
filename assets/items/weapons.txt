@@ -1,0 +1,16 @@
+bladed-dagger-4-1
+bladed-longsword-8-3
+bladed-rapier-8-2
+bladed-shortsword-6-2
+bladed-scimitar-6-3
+bludgeons-battleaxe-8-4
+bludgeons-club-4-2
+bludgeons-flail-8-2
+bludgeons-mace-6-4
+bludgeons-quarterstaff-6-4
+bludgeons-warhammer-8-5
+polearms-spear-6-3
+polearms-glaive-10-6
+polearms-pike-10-18
+polearms-halberd-10-6
+polearms-lance-10-6

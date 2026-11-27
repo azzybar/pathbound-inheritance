@@ -1,5 +1,0 @@
-dagger-4-1
-longsword-8-3
-rapier-8-2
-shortsword-6-2
-scimitar-6-3

@@ -1,5 +1,0 @@
-spear-6-3
-glaive-10-6
-pike-10-18
-halberd-10-6
-lance-10-6
