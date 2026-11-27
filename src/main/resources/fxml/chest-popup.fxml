@@ -20,8 +20,8 @@
   <Label />
 
   <HBox>
-    <Button fx:id="take" text="Take" onAction="#handleButtonAction" visible="false" managed="false" />
-    <Button fx:id="swap" text="Swap" onAction="#handleButtonAction" visible="false" managed="false" />
-    <Button fx:id="close" text="Close" onAction="#handleButtonAction" visible="false" managed="false" />
+    <Button fx:id="take" text="Take" onAction="#onButtonAction" visible="false" managed="false" />
+    <Button fx:id="swap" text="Swap" onAction="#onButtonAction" visible="false" managed="false" />
+    <Button fx:id="close" text="Close" onAction="#onButtonAction" visible="false" managed="false" />
   </HBox>
 </VBox>

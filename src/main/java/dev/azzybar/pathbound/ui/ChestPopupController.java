@@ -102,7 +102,7 @@ public final class ChestPopupController {
     }
 
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void onButtonAction(ActionEvent event) {
         // Determine which button was pressed
         Button source = (Button) event.getSource();
         if (chest != null && (source == take || source == swap)) {

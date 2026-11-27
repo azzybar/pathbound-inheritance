@@ -8,8 +8,9 @@ import dev.azzybar.pathbound.internal.BattleEncounter;
 import dev.azzybar.pathbound.internal.Player;
 import dev.azzybar.pathbound.internal.Enemy;
 import dev.azzybar.pathbound.internal.Chest;
-import dev.azzybar.pathbound.item.ItemRegistry;
+import dev.azzybar.pathbound.ui.BattleViewController;
 import dev.azzybar.pathbound.ui.ChestPopupController;
+import dev.azzybar.pathbound.item.ItemRegistry;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -77,11 +78,11 @@ final class Game {
         }
 
         // Creates and adds the chest popup
-        FXMLLoader loader = new FXMLLoader(
-                            Game.class.getResource(
-                            ChestPopupController.FXML_PATH));
-        this.overworldSet.getChildren().add(loader.load());
-        this.chestPopup = loader.getController();
+        FXMLLoader chestLoader = new FXMLLoader(
+                                 Game.class.getResource(
+                                 ChestPopupController.FXML_PATH));
+        this.overworldSet.getChildren().add(chestLoader.load());
+        this.chestPopup = chestLoader.getController();
         this.chestPopup.setPlayer(player);
 
 
@@ -173,11 +174,26 @@ final class Game {
     // Create a battle encounter and switch to it
     private void startBattle(Enemy enemy) {
         world.setVisible(false);
-        BattleEncounter battle = new BattleEncounter(player,
-                                                     enemy,
-                                                     () -> endBattle(enemy));
-        viewport.getChildren().add(battle.getView());
-        battle.start();
+
+        try {
+            // Creates the battle encounter
+            BattleEncounter encounter = new BattleEncounter(player,
+                                                            enemy,
+                                                            () -> endBattle(enemy));
+
+            // Sets up the gui for battles
+            FXMLLoader battleLoader = new FXMLLoader(
+                                    Game.class.getResource(
+                                    BattleViewController.FXML_PATH));
+            viewport.getChildren().add(battleLoader.load());
+            BattleViewController controller = battleLoader.getController();
+
+            // Setup scene and start battle
+            controller.initBattle(encounter);
+            encounter.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Automatically switches back to map only if battle won
