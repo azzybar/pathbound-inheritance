@@ -4,20 +4,10 @@
 package dev.azzybar.pathbound.internal;
 import dev.azzybar.pathbound.Config;
 
-import javafx.scene.Node;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
-import javafx.beans.binding.Bindings;
+import java.util.function.BiConsumer;
 /**
  * This is mean to be an associaton class, a regular class
  * that holds information regarding the relationship between
@@ -26,19 +16,13 @@ import javafx.beans.binding.Bindings;
  * the battle manager for handling turn order.
  */
 public class BattleEncounter {
-    private final StackPane view;
+    // Functions to call on end and update
     private final Runnable onBattleEnd;
-    
-    private Label battleText;
-    private Button fight;
-    private Button guard;
-    private Button item;
-    private Button pray;
-    
+    private BiConsumer<String, Boolean> onUIUpdate;
+
+    // Combatants for current encounter
     private final Player player;
-    
     private final Enemy enemy;
-    private ImageView enemyView;
     
     // 0 = Player's turn, 1 = Enemy's turn
     private int turnOrder;
@@ -53,43 +37,20 @@ public class BattleEncounter {
         
         // Determines who goes first
         this.turnOrder = (player.getSPD() >= enemy.getSPD()) ? 0 : 1;
-        
-        // Action buttons
-        this.fight = new Button("FIGHT");
-        this.guard = new Button("GUARD");
-        this.item = new Button("ITEM");
-        this.pray = new Button("PRAY");
-        
-        // Disables buttons
-        fight.setDisable(true);
-        guard.setDisable(true);
-        item.setDisable(true);
-        pray.setDisable(true);
 
-        // Sets up hp status and message
         this.player = player;
-        this.battleText = new Label("");
-        
-        // Creates a deep copy of enemy sprite
         this.enemy = enemy;
-        this.enemyView = Images.createScaledView(enemy.getSprite().getImage(), 5);
-        
-        // Creates battle scene
-        this.view = new StackPane();
-        this.view.setPrefSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
-        this.view.setMinSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
-        this.view.setMaxSize(Config.NATIVE_WIDTH, Config.NATIVE_HEIGHT);
-        switchScene();
     }
     
     public void start() {
         // Starts battle
         PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
         pause.setOnFinished(event -> {
-            updateGUI();
             if (turnOrder == 0) {
+                onUIUpdate.accept("Your turn.", false);
                 handlePlayerTurn();
             } else {
+                onUIUpdate.accept("Enemy's turn.", true);
                 handleEnemyTurn();
             } 
         });
@@ -102,20 +63,14 @@ public class BattleEncounter {
             end();
             return;
         }
-        
-        // Sets onAction events
-        fight.setOnAction(this::handleAction);
     }
     
     // Handles battle action
-    private void handleAction(ActionEvent event) {
-        // Gets source of the event
-        Button source = (Button) event.getSource();
-        
+    public void handleAction(String action) {
         // Changes turn order
         turnOrder = 1;
         
-        if (source == fight) {
+        if (action.equals("fight")) {
             // Player takes turn
             int dmg = player.takeTurn("fight");
             enemy.takeDmg(enemy.getName(), dmg);
@@ -126,18 +81,14 @@ public class BattleEncounter {
                 return;
             }
         }
-        
-        // Disables buttons
-        fight.setDisable(true);
-        guard.setDisable(true);
-        item.setDisable(true);
-        pray.setDisable(true);
+
+        onUIUpdate.accept("", true);
         
         PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
         pause.setOnFinished(e -> {
             // Switches control to enemy
             System.out.println("\u001B[36mSwitching to enemy\u001B[0m");
-            updateGUI();
+            onUIUpdate.accept("Enemy's turn.", true);
             handleEnemyTurn();
         });
         pause.play();
@@ -166,27 +117,10 @@ public class BattleEncounter {
             // Switches control to player
             System.out.println("\u001B[36mSwitching to player\u001B[0m");
             turnOrder = 0;
-            updateGUI();
+            onUIUpdate.accept("Your turn.", false);
             handlePlayerTurn();
         });
         pause.play();
-    }
-    
-    // Simply for updating battle text and health
-    private void updateGUI() {
-        if (turnOrder == 0) {
-            // Re-enables buttons
-            fight.setDisable(false);
-            guard.setDisable(false);
-            item.setDisable(false);
-            pray.setDisable(false);
-            
-            // battleText.setText("Your turn.");
-            battleText.setText("Your turn.");
-            player.status().update();
-        } else {
-            battleText.setText("Enemy's turn.");
-        }
     }
     
     // Ends battle (regardless of who lost)
@@ -198,7 +132,6 @@ public class BattleEncounter {
             
             // Resets player's and removes enemy from map
             player.resetHp();
-            player.status().update();
             
             // Switches back to map
             System.out.println("Switching back to map");
@@ -206,63 +139,12 @@ public class BattleEncounter {
         onBattleEnd.run();
     }
 
-    // Creates battle scene and switches to it
-    private void switchScene() {
-        // Creates battle layout
-        System.out.println("Switching to battle scene");
-        BorderPane root = new BorderPane();
-        view.getChildren().add(root);
-        root.setMouseTransparent(true);
-
-        StackPane center = new StackPane(enemyView, battleText);
-        center.setAlignment(enemyView, Pos.CENTER);
-        center.setAlignment(battleText, Pos.BOTTOM_CENTER);
-        root.setCenter(center);
-
-        battleText.setId("battle-text");
-        center.setId("center");
-        root.setId("battle-pane");
-
-        // Creates battle options
-        HBox actionMenu = new HBox(20);
-        actionMenu.getChildren().addAll(fight, guard, item, pray);
-        actionMenu.setAlignment(Pos.CENTER);
-
-        // Creates Battle GUI
-        VBox battleGUI = new VBox(15);
-        battleGUI.getChildren().addAll(player.status().get(), actionMenu);
-        root.setBottom(battleGUI);
-
-        // Adjusts margins
-        center.setMargin(enemyView, new Insets(0, 0, (Config.TILE_SIZE * 3), 0));
-        battleGUI.setMargin(player.status().get(), new Insets(Config.TILE_SIZE / 2.0, 0, 0, 50));
-
-        // Offset enemy view to keep pixels sharp
-        enemyView.translateXProperty().bind(
-            Bindings.createDoubleBinding(
-                () -> Math.ceil(enemyView.getLayoutX()) - enemyView.getLayoutX(),
-                enemyView.layoutXProperty()
-            )
-        );
-        enemyView.translateYProperty().bind(
-            Bindings.createDoubleBinding(
-                () -> Math.ceil(enemyView.getLayoutY()) - enemyView.getLayoutY(),
-                enemyView.layoutYProperty()
-            )
-        );
-
-        // Goes through the action buttons
-        for (Node node : actionMenu.getChildren()) {
-            if (node instanceof Button) {
-                // Adds their css and margins
-                Button button = (Button) node;
-                button.getStyleClass().add("action-button");
-                actionMenu.setMargin(button, new Insets(0, 0, Config.TILE_SIZE, 0));
-            }
-        }
-        System.out.println("\u001B[92mSuccessfully switched to battle scene\u001B[0m");
+    public void setOnUIUpdate(BiConsumer<String, Boolean> onUIUpdate) {
+        this.onUIUpdate = onUIUpdate;
     }
 
     // Getters
-    public StackPane getView() { return view; }
+    // public StackPane getView() { return view; }
+    public Player getPlayer() { return player; }
+    public Enemy getEnemy() { return enemy; }
 }

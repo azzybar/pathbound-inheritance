@@ -11,9 +11,8 @@ import javafx.animation.TranslateTransition;
 import javafx.animation.Interpolator;
 import javafx.util.Duration;
 public class Player extends Entity {
-    // Player's hp and moving status
+    // Player's moving status
     private boolean isMoving;
-    private final HpStatus status;
     
     // Index order: Head, Torso, Arms, Legs
     private Armor[] armor;
@@ -24,7 +23,6 @@ public class Player extends Entity {
         super(image, x, y);
 
         this.isMoving = false;
-        this.status = new HpStatus(this);
         this.armor = new Armor[4];
         this.weapon = null;
     }
@@ -203,7 +201,6 @@ public class Player extends Entity {
     
     // Getters
     public boolean isMoving() { return isMoving; }
-    public HpStatus status() { return status; }
     public Armor[] getArmor() { return armor; }
     public Weapon getWeapon() { return weapon; }
     
