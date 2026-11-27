@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.azzybar.pathbound.ui.BattleViewController"
+           fx:id="view" >
+  <BorderPane id="battle-pane" >
+    <center>
+      <StackPane id="center" >
+        <ImageView fx:id="enemyView" preserveRatio="true" smooth="false" StackPane.alignment="CENTER" />
+        <Label fx:id="battleText" id="battle-text" StackPane.alignment="BOTTOM_CENTER" />
+      </StackPane>
+    </center>
+    <bottom>
+      <VBox id="battle-gui" >
+        <HBox fx:id="hpBox" styleClass="hp-box" >
+          <Label fx:id="hpDisplay" styleClass="hp-display" />
+          <Rectangle fx:id="hpBar" styleClass="hp-bar" />
+        </HBox>
+        <HBox fx:id="actionMenu" id="action-menu" >
+          <Button fx:id="fight" styleClass="action-button" text="FIGHT" onAction="#onFightAction" disable="true" />
+          <Button fx:id="guard" styleClass="action-button" text="GUARD" onAction="#onGuardAction" disable="true" />
+          <Button fx:id="item" styleClass="action-button" text="ITEM" onAction="#onItemAction" disable="true" />
+          <Button fx:id="pray" styleClass="action-button" text="PRAY" onAction="#onPrayAction" disable="true" />
+        </HBox>
+      </VBox>
+    </bottom>
+  </BorderPane>
+</StackPane>
