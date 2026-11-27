@@ -24,8 +24,8 @@ public final class Config {
     public static final Path APP_DIR = resolveAppDir();
     public static final String CSS_PATH = Config.class.getResource("/styles/stylesheet.css").toExternalForm();
 
-    // File extensions regarding configuration and image files
-    public static final String CONFIG_EXT = ".txt";
+    // File extensions regarding items and image files
+    public static final String ITEM_EXT = ".txt";
     public static final String IMAGE_EXT = ".png";
 
     // Information about tile size and map dimensions

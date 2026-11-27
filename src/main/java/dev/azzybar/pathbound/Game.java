@@ -7,9 +7,8 @@ import dev.azzybar.pathbound.internal.GameMap;
 import dev.azzybar.pathbound.internal.BattleEncounter;
 import dev.azzybar.pathbound.internal.Player;
 import dev.azzybar.pathbound.internal.Enemy;
-import dev.azzybar.pathbound.internal.Armor;
-import dev.azzybar.pathbound.internal.Weapon;
 import dev.azzybar.pathbound.internal.Chest;
+import dev.azzybar.pathbound.item.ItemRegistry;
 import dev.azzybar.pathbound.ui.ChestPopupController;
 
 import javafx.fxml.FXMLLoader;
@@ -46,8 +45,7 @@ final class Game {
 
     Game() throws IOException {
         // Add items
-        Armor.addArmor();
-        Weapon.addWeapons();
+        ItemRegistry.loadAll();
         this.map = new GameMap();
 
         // Overarching for non-battle ui and sprites

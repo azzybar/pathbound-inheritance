@@ -53,6 +53,7 @@ javac --release "${JAVA_VERSION}" \
       "${JAVA_DIR}/module-info.java" \
       "${JAVA_DIR}/${MAIN_MODULE_DIR}/"*.java \
       "${JAVA_DIR}/${MAIN_MODULE_DIR}/internal/"*.java \
+      "${JAVA_DIR}/${MAIN_MODULE_DIR}/item/"*.java \
       "${JAVA_DIR}/${MAIN_MODULE_DIR}/ui/"*.java
 cp -r "${RESOURCES_DIR}/"* "${CLASSES_DIR}/"
 

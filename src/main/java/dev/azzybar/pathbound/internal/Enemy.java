@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.item.Weapon;
 
 import javafx.scene.image.Image;
 import javafx.scene.effect.ColorAdjust;
@@ -12,9 +13,10 @@ public class Enemy extends Entity {
     private boolean wasKilled;
     
     // Constructor
-    public Enemy(Image image, int x, int y, String name) {
+    public Enemy(Image image, String name, Weapon weapon, int x, int y) {
         super(image, x, y);
         this.name = name;
+        this.weapon = weapon;
         
         // Randomizes stats (with upper and lower limits)
         double DEF = Math.max(Math.random() * 0.55, 0.1);
@@ -25,15 +27,14 @@ public class Enemy extends Entity {
         setDEF(DEF);
         setSPD(SPD);
         setEVA(EVA);
-        
-        this.weapon = Weapon.randomWeapon();
+
         this.wasKilled = false;
     }
     
     // For battle encounters
     public int takeTurn() {
         // Damage is a number from 1 to DMG
-        int maxDMG = weapon.getDMG();
+        int maxDMG = weapon.dmg();
         int dmg = (int) (Math.random() * maxDMG) + 1;
         return dmg;
     }
@@ -48,7 +49,7 @@ public class Enemy extends Entity {
     
     // To the console during battles
     public void printStats() {
-        System.out.printf("Weapon: %s (1d%d)\n", weapon.getName(), weapon.getDMG());
+        System.out.printf("Weapon: %s (1d%d)\n", weapon.name(), weapon.dmg());
         System.out.printf("DEF: %.1f%%\n", (getDEF() * 100));
         System.out.printf("SPD: %.1f%%\n", (getSPD() * 100));
         System.out.printf("EVA: %.1f%%\n", (getEVA() * 100));

@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 package dev.azzybar.pathbound.internal;
+import dev.azzybar.pathbound.item.Item;
+import dev.azzybar.pathbound.item.Armor;
+import dev.azzybar.pathbound.item.Weapon;
 
 import javafx.scene.image.Image;
 import javafx.animation.TranslateTransition;
@@ -35,7 +38,7 @@ public class Player extends Entity {
                     return 5;
                 }
                 
-                int maxDMG = weapon.getDMG();
+                int maxDMG = weapon.dmg();
                 int dmg = (int) (Math.random() * maxDMG) + 1;
                 return dmg;
             default:
@@ -54,7 +57,7 @@ public class Player extends Entity {
         // Casts item to its subclass
         if (item instanceof Armor) {
             Armor armor = (Armor) item;
-            this.armor[armor.getPiece()] = armor;
+            this.armor[armor.slot().ordinal()] = armor;
         } else {
             Weapon weapon = (Weapon) item;
             this.weapon = weapon;
@@ -105,11 +108,11 @@ public class Player extends Entity {
         for (Armor piece : armor) {
             if (piece != null) {
                 // Multiples the damage modifiers passing through
-                newDEF *= (1 - piece.getDEF());
+                newDEF *= (1 - piece.def());
                 pieces++;
                 
                 // Tracks type of armor
-                switch (piece.getName()) {
+                switch (piece.name()) {
                     case "padded":
                         padded++;
                         break;
@@ -171,13 +174,13 @@ public class Player extends Entity {
         for (Armor piece : armor) {
             if (piece != null) {
                 // Multiples to get remaining speed
-                newSPD *= (1 - piece.getSPD());
+                newSPD *= (1 - piece.spd());
             }
         }
         
         // Checks if player has a weapon
         if (weapon != null) {
-            newSPD *= (1 - weapon.getSPD());
+            newSPD *= (1 - weapon.spd());
         }
         
         // Sets the new speed
@@ -190,7 +193,7 @@ public class Player extends Entity {
         double newEVA = 0.1;
         for (Armor piece : armor) {
             if (piece != null) {
-                newEVA *= (1 - piece.getEVA());
+                newEVA *= (1 - piece.eva());
             }
         }
         

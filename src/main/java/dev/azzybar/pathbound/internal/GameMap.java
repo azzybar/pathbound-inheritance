@@ -3,6 +3,9 @@
 
 package dev.azzybar.pathbound.internal;
 import dev.azzybar.pathbound.Config;
+import dev.azzybar.pathbound.item.ItemRegistry;
+import dev.azzybar.pathbound.item.Item;
+import dev.azzybar.pathbound.item.Weapon;
 
 // Creating the map tiles and spprites
 import javafx.scene.layout.GridPane;
@@ -105,10 +108,10 @@ public class GameMap {
                     for (int col = 0; col < Config.WIDTH; col++) {
                         mapData[row][col] = Integer.parseInt(data[index]);
                         
-                        // Checks and updates chest count
-                        if (mapData[row][col] == 2) {
-                            Chest.updateCount();
-                        }
+                        // // Checks and updates chest count
+                        // if (mapData[row][col] == 2) {
+                        //     Chest.updateCount();
+                        // }
                         
                         index++;
                     }
@@ -116,6 +119,10 @@ public class GameMap {
             }
         }
         System.out.println("\u001B[92mSuccessfully retrieved map data\u001B[0m");
+
+        // Creates a copy of all the items from the registry
+        List<Item> itemPool = new ArrayList<Item>(ItemRegistry.getAll());
+        List<Weapon> weaponPool = new ArrayList<Weapon>(ItemRegistry.getAllOfType(Weapon.class));
         
         // Sets visual map based on mapData
         System.out.println("Initializing new game map");
@@ -136,13 +143,14 @@ public class GameMap {
                 // Switches image based on the stored value
                 switch (mapData[col][row]) {
                     case 1:
-                        addEnemy(col, row);
+                        addEnemy(col, row, weaponPool);
                     case 0:
                         tile = determinePath(col, row);
                         break;
                     case 2:
-                        // Creates a chest object
-                        Chest chest = new Chest(row, col);
+                        // Randomly selects an item to populate chest with
+                        Item item = itemPool.remove((int) (Math.random() * itemPool.size()));
+                        Chest chest = new Chest(item, row, col);
                         chests.add(chest);
                         map.add(chest.getContainer(), row, col);
                         break;
@@ -312,7 +320,7 @@ public class GameMap {
     }
     
     // Adds an enemy to the map
-    private void addEnemy(int x, int y) {
+    private void addEnemy(int x, int y, List<Weapon> weaponPool) {
         // Possible enemies
         String[] types = {
             "bandit",
@@ -323,9 +331,12 @@ public class GameMap {
             "skeleton"
         };
         int t = (int) (Math.random() * types.length);
+
+        // Selects a random weapon
+        Weapon weapon = weaponPool.remove((int) (Math.random() * weaponPool.size()));
         
         // Creates a randomized enemy
-        Enemy enemy = new Enemy(sprites.get(types[t]), y, x, types[t]);
+        Enemy enemy = new Enemy(sprites.get(types[t]), types[t], weapon, y, x);
         enemies.add(enemy);
     }
     

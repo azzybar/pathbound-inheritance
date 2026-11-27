@@ -4,9 +4,9 @@
 package dev.azzybar.pathbound.ui;
 import dev.azzybar.pathbound.internal.Player;
 import dev.azzybar.pathbound.internal.Chest;
-import dev.azzybar.pathbound.internal.Item;
-import dev.azzybar.pathbound.internal.Armor;
-import dev.azzybar.pathbound.internal.Weapon;
+import dev.azzybar.pathbound.item.Item;
+import dev.azzybar.pathbound.item.Armor;
+import dev.azzybar.pathbound.item.Weapon;
 
 // Connecting to and using chest-popup.fxml
 import javafx.fxml.FXML;
@@ -56,11 +56,11 @@ public final class ChestPopupController {
 
                 // Checks what the player already has
                 Armor[] armor = player.getArmor();
-                if (armor[chestArmor.getPiece()] != null) {
+                if (armor[chestArmor.slot().ordinal()] != null) {
                     // Prints to the console
-                    String piece = (chestArmor.getPiece() == 0) ? "head"
-                        : (chestArmor.getPiece() == 1) ? "torso"
-                        : (chestArmor.getPiece() == 2) ? "arm" : "leg";
+                    String piece = (chestArmor.slot().ordinal() == 0) ? "head"
+                        : (chestArmor.slot().ordinal() == 1) ? "torso"
+                        : (chestArmor.slot().ordinal() == 2) ? "arm" : "leg";
                     System.out.println("Already wearing " + piece + " armor");
 
                     lines[stats.length].setText("You are already wearing " + piece + " armor");
@@ -83,7 +83,7 @@ public final class ChestPopupController {
                 if (weapon != null) {
                     System.out.println("Already have a weapon");
 
-                    lines[stats.length].setText("You already have a " + weapon.getName());
+                    lines[stats.length].setText("You already have a " + weapon.name());
                     lines[stats.length].setVisible(true);
                     lines[stats.length + 1].setText("Do you wish to switch?");
                     lines[stats.length + 1].setVisible(true);
